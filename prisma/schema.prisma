@@ -1,0 +1,156 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+// --- PRISMA GENERATOR AND DATABASE ---
+
+generator client {
+  provider        = "prisma-client"
+  output          = "../lib/generated/prisma"
+  previewFeatures = ["driverAdapters"]
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// --- TABLES AND FIELDS ---
+
+enum Role {
+  STUDENT
+  TEACHER
+}
+
+enum SubmitState {
+  EMPTY
+  PENDING
+  SUBMITTED
+}
+
+model User {
+  id        String   @id @default(cuid())
+  name      String
+  email     String   @unique
+  password  String
+  role      Role     @default(STUDENT)
+  createdAt DateTime @default(now())
+
+  // --- RELATION ---
+  coursesCreated Course[]     @relation("TeacherCourses")
+  enrollments    Enrollment[]
+  submissions    Submission[]
+  answers        Answer[]
+}
+
+model Course {
+  id          String   @id @default(cuid())
+  title       String
+  description String?
+  createdAt   DateTime @default(now())
+
+  teacher   User   @relation("TeacherCourses", fields: [teacherId], references: [id])
+  teacherId String
+
+  lessons     Lesson[]
+  assignments Assignment[]
+  questions   Question[]
+  enrollments Enrollment[]
+}
+
+model Lesson {
+  id      String  @id @default(cuid())
+  title   String
+  content String?
+  order   Int     @default(0)
+
+  course   Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  courseId String
+
+  files File[]
+}
+
+model File {
+  id       String @id @default(cuid())
+  name     String
+  url      String
+
+  lesson   Lesson @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+  lessonId String
+}
+
+model Assignment {
+  id          String    @id @default(cuid())
+  title       String
+  description String?
+  fileUrl     String?
+  limitDate   DateTime?
+  createdAt   DateTime  @default(now())
+
+  course   Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  courseId String
+
+  submissions Submission[]
+}
+
+model Submission {
+  id          String      @id @default(cuid())
+  title       String?
+  description String?
+  fileUrl     String?
+  state       SubmitState @default(EMPTY)
+  score       Float?
+  feedback    String?
+  submittedAt DateTime?
+
+  assignment   Assignment @relation(fields: [assignmentId], references: [id], onDelete: Cascade)
+  assignmentId String
+
+  student   User   @relation(fields: [studentId], references: [id])
+  studentId String
+}
+
+model Question {
+  id             String @id @default(cuid())
+  question       String
+  optionA        String
+  optionB        String
+  optionC        String
+  optionD        String
+  correctOption  String // --- "A", "B", "C" or "D" --- 
+  difficultyLevel Int   @default(1) // --- DIFFICULTY FROM 1 TO 5 ---
+
+  course   Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  courseId String
+
+  answers Answer[]
+}
+
+model Answer {
+  id             String   @id @default(cuid())
+  selectedOption String
+  isCorrect      Boolean
+  responseTime   Int?     // --- SECONDS ALUMN TOOK TO ANSWER ---
+  answeredAt     DateTime @default(now())
+
+  student    User     @relation(fields: [studentId], references: [id])
+  studentId  String
+
+  question   Question @relation(fields: [questionId], references: [id])
+  questionId String
+}
+
+model Enrollment {
+  id           String   @id @default(cuid())
+  currentLevel Int      @default(1) // --- ADAPTATIVE LEVEL FROM 1 TO 5 ---
+  enrolledAt   DateTime @default(now())
+
+  student   User   @relation(fields: [studentId], references: [id])
+  studentId String
+
+  course   Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  courseId String
+
+  @@unique([studentId, courseId]) // --- ALUMN CAN ONLY ENROLL ONCE ---
+}
