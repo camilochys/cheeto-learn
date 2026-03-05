@@ -36,3 +36,19 @@ export async function POST(request: Request) {
         return NextResponse.json({ error: "Error interno del servidor." }, { status: 500 });
     }
 }
+
+// --- GET TO READ AND OBTAIN COURSES FROM PRISMA ---
+export async function GET(request: Request) {
+    try {
+        const auth = verifyAuth(request);
+        if (auth.error) {
+            return NextResponse.json({ error: auth.error }, { status: auth.status });
+        }
+
+        const course = await prisma.course.findMany();
+        return NextResponse.json({ data: course }, { status: 200 });
+    } catch (error) {
+        console.log(error);
+        return NextResponse.json({ error: "Error interno del servidor." }, { status: 500 });
+    }
+}
