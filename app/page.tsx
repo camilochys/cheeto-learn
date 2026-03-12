@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { BookOpen, Users, Award, BarChart3, ArrowRight } from "lucide-react";
+import Link from "next/link";
 
 export default function Home() {
   return (
@@ -14,8 +15,15 @@ export default function Home() {
             </img></Button>
           </div>
           <div className="flex gap-4">
+            {/* --- LOGIN BUTTON --- */}
+            <Link href="/login">
             <Button variant="ghost">INICIAR SESIÓN</Button>
+            </Link>
+
+            {/* --- REGISTER BUTTON --- */}
+            <Link href="/login">
             <Button>REGISTRO</Button>
+            </Link>
           </div>
         </div>
       </nav>
@@ -40,7 +48,9 @@ export default function Home() {
         </p>
       </div>
       <div className="flex gap-4">
+        <Link href="/login">
         <Button size="lg">¡Aprender ahora!</Button>
+        </Link>
         <Button variant="outline" size="lg">Ver más...</Button>
       </div>
     </div>
@@ -125,7 +135,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* --- FOOTER --- */}
+      {/* --- FOOTER TEMPLATE EXAMPLE --- */}
       <footer className="border-t border-border bg-card mt-20">
         <div className="max-w-6xl mx-auto px-4 py-8">
           <div className="grid md:grid-cols-4 gap-8 mb-8">
@@ -163,10 +173,8 @@ export default function Home() {
             </div>
           </div>
           <div className="border-t border-border pt-8 flex items-center justify-between">
-            <p className="text-sm text-muted-foreground">&copy; 2024 LearnHub. All rights reserved.</p>
+            <p className="text-sm text-muted-foreground">&copy; 2024 CheetoLearn. All rights reserved.</p>
             <div className="flex gap-4 text-sm text-muted-foreground">
-              <a href="#" className="hover:text-foreground">Twitter</a>
-              <a href="#" className="hover:text-foreground">LinkedIn</a>
               <a href="#" className="hover:text-foreground">GitHub</a>
             </div>
           </div>
