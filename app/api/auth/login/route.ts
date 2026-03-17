@@ -26,7 +26,13 @@ if (!existingUser || !verifiedPassword) {
 
 // --- GENERATE TOKEN FOR ID, EMAIL AND ROLE AND SHOW EMAIL AND TOKEN ---
 const token = generateToken({ id: existingUser.id, email: existingUser.email, role: existingUser.role });
-return NextResponse.json({ data: {email,token} }, { status: 200 });
+return NextResponse.json({ 
+  data: { 
+    email, 
+    token,
+    role: existingUser.role 
+  } 
+}, { status: 200 });
 // --- END OF TRYCATCH ---
   } catch (error) {
     return NextResponse.json(
