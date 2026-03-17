@@ -21,7 +21,9 @@ export default function LoginPage() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
-  async function handleLogin() {
+const [fadingOut, setFadingOut] = useState(false);
+
+async function handleLogin() {
     setLoading(true);
     setError("");
 
@@ -39,23 +41,25 @@ export default function LoginPage() {
       return;
     }
 
-    localStorage.setItem("token", data.token);
-    localStorage.setItem("role", data.role);
+localStorage.setItem("token", data.data.token);
+localStorage.setItem("role", data.data.role);
 
-    if (data.role === "TEACHER") {
-      router.push("/teacher");
-    } else {
-      router.push("/dashboard");
-    }
+    // Fade out antes de redirigir
+    setFadingOut(true);
+    setTimeout(() => {
+      if (data.role === "TEACHER") {
+        router.push("/teacher");
+      } else {
+        router.push("/dashboard");
+      }
+    }, 600);
   }
 
-  return (
-    <div className="min-h-screen flex items-center justify-center bg-background">
-      <img
-        src="/cheeto_learn_logo.png"
-        alt=""
-        className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] opacity-10 pointer-events-none z-[-1]"
-      />
+return (
+    <div
+      className="min-h-screen flex items-center justify-center bg-background transition-opacity duration-[600ms]"
+      style={{ opacity: fadingOut ? 0 : 1 }}
+    >
       <Card className="w-full max-w-md">
         <CardHeader className="text-center space-y-2">
           <Link href="/">
