@@ -42,14 +42,14 @@ export default function Home() {
             {isLoggedIn ? (
               <>
                 <Link href={role === "TEACHER" ? "/teacher" : "/dashboard"}>
-                  <Button variant="ghost">MI CUENTA</Button>
+                  <Button>MI CUENTA</Button>
                 </Link>
-                <Button onClick={handleLogout}>CERRAR SESIÓN</Button>
+                <Button variant="outline" onClick={handleLogout}>CERRAR SESIÓN</Button>
               </>
             ) : (
               <>
                 <Link href="/login">
-                  <Button variant="ghost">INICIAR SESIÓN</Button>
+                  <Button variant="outline">INICIAR SESIÓN</Button>
                 </Link>
                 <Link href="/login">
                   <Button>REGISTRO</Button>
@@ -65,7 +65,7 @@ export default function Home() {
         <img
           src="/cheeto_learn_logo.png"
           alt=""
-          className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[720px] opacity-25 pointer-events-none z-[-1]"
+          className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-180 opacity-25 pointer-events-none z-[-1]"
         />
         <section className="relative z-10 max-w-6xl mx-auto px-4 py-20">
           <div className="flex flex-col items-center text-center gap-8">

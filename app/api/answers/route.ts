@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { verifyAuth } from "@/lib/middleware";
+import { calculateNewLevel, calculatePercentage } from "@/lib/adaptive";
 
 export async function POST(request: Request) {
     try {
@@ -46,10 +47,6 @@ export async function POST(request: Request) {
         take: 5
     });
 
-    // --- CALCULATE THE PERCENTAGE OF CORRECT ANSWERS ---
-    const correctCount = lastAnswers.filter(a => a.isCorrect).length;
-    const percentage = (correctCount / lastAnswers.length) * 100;
-
     // --- OBTAIN THE CURRENT LEVEL OF THE STUDENT IN THAT COURSE ---
     const enrollment = await prisma.enrollment.findFirst({
         where: { studentId: payload.id, courseId }
@@ -59,13 +56,9 @@ export async function POST(request: Request) {
         return NextResponse.json({ error: "El alumno no está inscrito en este curso." }, { status: 404 });
     }
 
-    let newLevel = enrollment.currentLevel;
-
-    // --- APPLY ADAPTATIVE ALGORITHM WHEN THERE IS ONLY 5 ANSWERS ---
-    if (lastAnswers.length === 5) {
-        if (percentage > 70 && newLevel < 5) newLevel += 1;
-        if (percentage < 40 && newLevel > 1) newLevel -= 1;
-    }
+    // --- CALCULATE PERCENTAGE AND NEW LEVEL USING ADAPTIVE ENGINE ---
+    const percentage = calculatePercentage(lastAnswers);
+    const newLevel = calculateNewLevel(enrollment.currentLevel, lastAnswers);
 
     // --- UPDATE NEVEL IF IT CHANGES ---
     if (newLevel !== enrollment.currentLevel) {

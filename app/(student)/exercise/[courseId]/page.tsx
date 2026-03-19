@@ -133,7 +133,7 @@ export default function ExercisePage() {
 
   return (
     <div
-      className="min-h-screen bg-background transition-opacity duration-[600ms]"
+      className="min-h-screen bg-background transition-opacity duration-600"
       style={{ opacity: visible ? 1 : 0 }}
     >
       {/* --- NAVBAR --- */}
