@@ -57,7 +57,7 @@ localStorage.setItem("role", data.data.role);
 
 return (
     <div
-      className="min-h-screen flex items-center justify-center bg-background transition-opacity duration-[600ms]"
+      className="min-h-screen flex items-center justify-center bg-background transition-opacity duration-600"
       style={{ opacity: fadingOut ? 0 : 1 }}
     >
       <Card className="w-full max-w-md">
