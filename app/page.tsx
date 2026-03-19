@@ -195,7 +195,7 @@ export default function Home() {
             </div>
           </div>
           <div className="border-t border-border pt-8 flex items-center justify-between">
-            <p className="text-sm text-muted-foreground">&copy; 2025 CheetoLearn. All rights reserved.</p>
+            <p className="text-sm text-muted-foreground">&copy; 2026 CheetoLearn. All rights reserved.</p>
             <div className="flex gap-4 text-sm text-muted-foreground">
               <a href="#" className="hover:text-foreground">GitHub</a>
             </div>
