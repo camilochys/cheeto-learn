@@ -21,30 +21,36 @@ export default function DashboardPage() {
   const [visible, setVisible] = useState(false);
   const [fadingOut, setFadingOut] = useState(false);
 
-useEffect(() => {
-    // Fade in inmediato
+  useEffect(() => {
     setVisible(true);
 
-const token = localStorage.getItem("token");
-const role = localStorage.getItem("role");
+    const token = localStorage.getItem("token");
+    const role = localStorage.getItem("role");
 
-if (!token) {
-  setFadingOut(true);
-  setTimeout(() => router.push("/login"), 600);
-  return;
-}
+    if (!token) {
+      setFadingOut(true);
+      setTimeout(() => router.push("/login"), 600);
+      return;
+    }
 
-if (role === "TEACHER") {
-  setFadingOut(true);
-  setTimeout(() => router.push("/teacher"), 600);
-  return;
-}
+    if (role === "TEACHER") {
+      setFadingOut(true);
+      setTimeout(() => router.push("/teacher"), 600);
+      return;
+    }
+
+    let fetchFailed = false;
+
+    const fetchData = fetchEnrollments(token).catch(() => {
+      fetchFailed = true;
+    });
 
     const minLoadTime = new Promise((res) => setTimeout(res, 2500));
-    const fetchData = fetchEnrollments(token);
 
     Promise.all([minLoadTime, fetchData]).then(() => {
-      setLoading(false);
+      if (!fetchFailed) {
+        setLoading(false);
+      }
     });
   }, []);
 
@@ -62,7 +68,7 @@ if (role === "TEACHER") {
 
     if (!res.ok) {
       redirectWithFade("/login");
-      return;
+      throw new Error("Unauthorized");
     }
 
     setEnrollments(data.data.map((e: any) => ({
