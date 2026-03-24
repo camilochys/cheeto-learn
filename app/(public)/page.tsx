@@ -49,10 +49,7 @@ export default function Home() {
             ) : (
               <>
                 <Link href="/login">
-                  <Button variant="outline">INICIAR SESIÓN</Button>
-                </Link>
-                <Link href="/login">
-                  <Button>REGISTRO</Button>
+                  <Button>INICIAR SESIÓN</Button>
                 </Link>
               </>
             )}

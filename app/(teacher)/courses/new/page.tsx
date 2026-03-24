@@ -8,11 +8,15 @@ import { LoadingScreen } from "@/components/shared/LoadingScreen";
 import { Navbar } from "@/components/shared/Navbar";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { Description } from "@/components/ui/description";
+import { Title } from "@/components/ui/title";
 import { Label } from "@/components/ui/label";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Eye, PenLine } from "lucide-react";
 import Link from "next/link";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 
+// --- CONSTS FOR STATES TOGGLES ETC ---
 export default function NewCoursePage() {
   const router = useRouter();
   const { token, isReady, fadingOut, logout } = useAuth({ requiredRole: "TEACHER" });
@@ -21,6 +25,7 @@ export default function NewCoursePage() {
   const [description, setDescription] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [previewMode, setPreviewMode] = useState(false);
 
   async function handleCreate() {
     if (!title.trim()) {
@@ -79,35 +84,74 @@ export default function NewCoursePage() {
           </Link>
           <div>
             <h1 className="text-3xl font-bold text-foreground">Nuevo curso</h1>
-            {/*<p className="text-muted-foreground">Crea un nuevo curso para tus alumnos</p>*/}
           </div>
         </div>
 
         <Card>
           <CardHeader>
+            <div>
             <CardTitle>Información del curso</CardTitle>
             <CardDescription>Rellena los datos básicos del curso</CardDescription>
+            </div>
+            {/* --- TOGGLE PREVIEW BUTTON --- */}
+            <div className="flex space-x-2 p-1 rounded-md">
+              <Button
+              variant={!previewMode ? "secondary" : "ghost"}
+              size="sm"
+              onClick={() => setPreviewMode(false)}
+              className="h-8 px-3">
+                <PenLine className="w-4 h-4 mr-2"/> Editar
+              </Button>
+              <Button
+              variant={previewMode ? "secondary" : "ghost"}
+              size="sm"
+              onClick={() => setPreviewMode(true)}
+              className="h-8 px-3">
+                <Eye className="w-4 h-4 mr-2"/> Previsualizar
+              </Button>
+            </div>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="title">Título del curso *</Label>
-              <Input
+              <Label htmlFor="title">Título del curso</Label>
+              {previewMode ? (
+                /* --- PREVIEW CONTAINER TITLE --- */
+                <div data-placeholder="Ej: Desarrollo de Aplicaciones Web - Primer Año" className="w-full min-w-0 px-3 py-2 text-sm rounded-md border border-input shadow-xs transition-[color,box-shadow] text-foreground overflow-y-auto prose prose-slate dark:prose-invert empty:before:content-[attr(data-placeholder)] empty:before:text-muted-foreground">
+                  <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                    {title}
+                  </ReactMarkdown>
+                </div>
+              ) : (
+                /* --- EDIT TEXTAREA TITLE --- */
+              <Title
                 id="title"
-                placeholder="Ej: Redes y Sistemas"
+                placeholder="Ej: Desarrollo de Aplicaciones Web - Primer Año"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
               />
+              )}
             </div>
+
             <div className="space-y-2">
               <Label htmlFor="description">Descripción</Label>
-              <textarea
+              {previewMode ? (
+                /* --- PREVIEW CONTAINER DESCRIPTION --- */
+                <div data-placeholder="Escribe el contenido del curso (soporta Markdown)..." className="w-full min-w-0 min-h-30 px-3 py-2 text-sm rounded-md border border-input shadow-xs transition-[color,box-shadow] text-foreground overflow-y-auto prose prose-slate dark:prose-invert empty:before:content-[attr(data-placeholder)] empty:before:text-muted-foreground">
+                  <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                    {description}
+                  </ReactMarkdown>
+                </div>
+              ) : (
+                /* --- EDIT TEXTAREA DESCRIPTION --- */
+              <Description
                 id="description"
-                placeholder="Describe el contenido del curso..."
+                placeholder="Escribe el contenido del curso (soporta Markdown)..."
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
-                className="w-full min-h-30 px-3 py-2 text-sm rounded-md border border-input bg-background text-foreground resize-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
               />
+              )}
             </div>
+            
             {error && (
               <p className="text-sm text-destructive">{error}</p>
             )}
