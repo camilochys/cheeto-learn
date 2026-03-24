@@ -10,6 +10,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { BookOpen, Users, Plus, BarChart3 } from "lucide-react";
 import Link from "next/link";
+import NewCoursePage from "../courses/new/page";
 
 interface Course {
   id: string;
@@ -80,7 +81,7 @@ export default function TeacherPage() {
             <h1 className="text-3xl font-bold text-foreground">Panel del profesor</h1>
             <p className="text-muted-foreground">Gestiona tus cursos y alumnos</p>
           </div>
-          <Link href="/teacher/courses/new">
+          <Link href="/courses/new">
             <Button>
               <Plus className="w-4 h-4 mr-2" />
               Nuevo curso
@@ -125,7 +126,7 @@ export default function TeacherPage() {
               <CardContent className="space-y-4">
                 <BookOpen className="w-12 h-12 text-muted-foreground mx-auto" />
                 <p className="text-muted-foreground">No has creado ningún curso todavía.</p>
-                <Link href="/teacher/courses/new">
+                <Link href="/courses/new">
                   <Button>
                     <Plus className="w-4 h-4 mr-2" />
                     Crear primer curso
