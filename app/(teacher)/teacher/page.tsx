@@ -81,7 +81,7 @@ export default function TeacherPage() {
             <h1 className="text-3xl font-bold text-foreground">Panel del profesor</h1>
             <p className="text-muted-foreground">Gestiona tus cursos y alumnos</p>
           </div>
-          <Link href="/courses/new">
+          <Link href="/teacher/courses/new">
             <Button>
               <Plus className="w-4 h-4 mr-2" />
               Nuevo curso
