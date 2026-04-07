@@ -10,7 +10,6 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { BookOpen, Users, Plus, BarChart3 } from "lucide-react";
 import Link from "next/link";
-import NewCoursePage from "./courses/new/page";
 
 interface Course {
   id: string;
