@@ -98,6 +98,8 @@ Create a `.env` file in the root with the following variables:
 ```env
 DATABASE_URL="your-supabase-connection-string"
 JWT_SECRET="your-secret-key"
+NEXT_PUBLIC_SUPABASE_URL="your-supabase-url.co"
+SUPABASE_SERVICE_ROLE_KEY="your-supabase-service-role-key"
 ```
 
 ---
