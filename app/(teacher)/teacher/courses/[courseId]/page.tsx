@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { useAuth } from "@/hooks/useAuth";
 import { useFade } from "@/hooks/useFade";
@@ -12,10 +12,11 @@ import { Input } from "@/components/ui/input";
 import { Description } from "@/components/ui/description";
 import { Title } from "@/components/ui/title";
 import { Label } from "@/components/ui/label";
-import { ArrowLeft, Plus, BookOpen, HelpCircle, Eye, PenLine } from "lucide-react";
+import { ArrowLeft, Plus, BookOpen, HelpCircle, Eye, PenLine, Paperclip, ImageIcon, Upload, File as FileIcon } from "lucide-react";
 import Link from "next/link";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 
 interface Lesson {
   id: string;
@@ -38,6 +39,18 @@ export default function ManageCoursePage() {
   const router = useRouter();
   const { token, isReady, fadingOut, logout } = useAuth({ requiredRole: "TEACHER" });
   const { visible, getFadeStyle } = useFade();
+
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const handleFileClick = () => {
+  fileInputRef.current?.click();
+  };
+
+  const onFileSelected = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const file = e.target.files?.[0];
+  if (file) {
+    console.log("Archivo seleccionado:", file.name);
+    // Aquí es donde luego añadirías tu lógica de subida (fetch a tu API)
+  }};
 
   const [course, setCourse] = useState<{ title: string; description: string } | null>(null);
   const [lessons, setLessons] = useState<Lesson[]>([]);
@@ -214,7 +227,7 @@ export default function ManageCoursePage() {
         </div>
 
         {/* --- STATS --- */}
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-4 gap-4">
           <Card className="bg-primary/5 border-primary/20">
             <CardContent className="py-4 flex items-center gap-3">
               <BookOpen className="w-6 h-6 text-primary" />
@@ -225,6 +238,15 @@ export default function ManageCoursePage() {
             </CardContent>
           </Card>
           <Card className="bg-primary/5 border-primary/20">
+            <CardContent className="py-4 flex items-center gap-3">
+              <HelpCircle className="w-6 h-6 text-primary" />
+              <div>
+                <p className="text-xl font-bold">{questions.length}</p>
+                <p className="text-xs text-muted-foreground">Preguntas</p>
+              </div>
+            </CardContent>
+          </Card>
+                    <Card className="bg-primary/5 border-primary/20">
             <CardContent className="py-4 flex items-center gap-3">
               <HelpCircle className="w-6 h-6 text-primary" />
               <div>
@@ -332,9 +354,22 @@ export default function ManageCoursePage() {
                     <Plus className="w-4 h-4 mr-2" />
                     {lessonLoading ? "Creando lección..." : "Añadir lección"}
                   </Button>
+                  {/* NUEVO BOTÓN DESPLEGABLE PARA ARCHIVOS */}
+      <Button variant="outline" className="shrink-0" onClick={handleFileClick}>
+        <Paperclip className="w-4 h-4 mr-2" />
+        Adjuntar
+      </Button>
                 </div>
               </CardContent>
             </Card>
+
+      <input
+        type="file"
+        ref={fileInputRef}
+        onChange={onFileSelected}
+        className="hidden"
+        accept=".pdf,.png,.jpg,.jpeg,.zip,.7z,.rar"
+      />
 
             <div className="space-y-3">
               {lessons.length === 0 ? (

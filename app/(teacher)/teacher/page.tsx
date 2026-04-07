@@ -79,14 +79,7 @@ export default function TeacherPage() {
         <div className="flex items-center justify-between">
           <div className="space-y-1">
             <h1 className="text-3xl font-bold text-foreground">Panel del profesor</h1>
-            <p className="text-muted-foreground">Gestiona tus cursos y alumnos</p>
           </div>
-          <Link href="/teacher/courses/new">
-            <Button>
-              <Plus className="w-4 h-4 mr-2" />
-              Nuevo curso
-            </Button>
-          </Link>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -120,7 +113,23 @@ export default function TeacherPage() {
         </div>
 
         <div className="space-y-4">
-          <h2 className="text-xl font-semibold text-foreground">Mis cursos</h2>
+          <div className="flex items-start justify-between">
+            <div className="space-y-1">
+              <h1 className="text-3xl font-bold text-foreground">Mis cursos</h1>
+              <p className="text-muted-foreground">Gestiona tus cursos y alumnos</p>
+            </div>
+
+              <div className="align-top">
+                <Link href="/teacher/courses/new">
+                  <Button className="space-x-3">
+                    <Plus className="w-4 h-4 mr-2" />
+                      Nuevo curso
+                  </Button>
+                </Link>
+              </div>
+            
+            </div>
+          
           {courses.length === 0 ? (
             <Card className="text-center py-16">
               <CardContent className="space-y-4">

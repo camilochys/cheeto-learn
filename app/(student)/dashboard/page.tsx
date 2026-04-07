@@ -8,6 +8,8 @@ import { Navbar } from "@/components/shared/Navbar";
 import { CourseCard } from "@/components/shared/CourseCard";
 import { Card, CardContent } from "@/components/ui/card";
 import { BookOpen, BarChart3 } from "lucide-react";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
 
 interface Course {
   id: string;
@@ -102,19 +104,26 @@ export default function DashboardPage() {
           </div>
         )}
 
-        <Card className="bg-primary/5 border-primary/20">
-          <CardContent className="py-6">
-            <div className="flex items-center gap-4">
-              <BarChart3 className="w-8 h-8 text-primary" />
-              <div>
-                <p className="font-semibold text-foreground">Tu progreso en CheetoLearn</p>
-                <p className="text-sm text-muted-foreground">
-                  Estás inscrito en {enrollments.length} {enrollments.length === 1 ? "curso" : "cursos"}. ¡Sigue practicando para subir de nivel!
-                </p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+<Card className="bg-primary/5 border-primary/20">
+  <CardContent className="py-6">
+    <div className="flex items-center justify-between">
+      <div className="flex items-center gap-4">
+        <BarChart3 className="w-8 h-8 text-primary" />
+        <div>
+          <p className="font-semibold text-foreground">Tu progreso en CheetoLearn</p>
+          <p className="text-sm text-muted-foreground">
+            Estás inscrito en {enrollments.length} {enrollments.length === 1 ? "curso" : "cursos"}. ¡Sigue practicando para subir de nivel!
+          </p>
+        </div>
+      </div>
+      <Link href="/progress">
+        <Button variant="outline" size="sm">
+          Ver progreso
+        </Button>
+      </Link>
+    </div>
+  </CardContent>
+</Card>
       </main>
     </div>
   );
