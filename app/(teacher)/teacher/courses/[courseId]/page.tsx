@@ -16,7 +16,6 @@ import { ArrowLeft, Plus, BookOpen, HelpCircle, Eye, PenLine, Paperclip, ImageIc
 import Link from "next/link";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 
 interface Lesson {
   id: string;
@@ -45,12 +44,30 @@ export default function ManageCoursePage() {
   fileInputRef.current?.click();
   };
 
-  const onFileSelected = (e: React.ChangeEvent<HTMLInputElement>) => {
+const onFileSelected = async (e: React.ChangeEvent<HTMLInputElement>) => {
   const file = e.target.files?.[0];
-  if (file) {
-    console.log("Archivo seleccionado:", file.name);
-    // Aquí es donde luego añadirías tu lógica de subida (fetch a tu API)
-  }};
+  if (!file) return;
+
+  const formData = new FormData();
+  formData.append("file", file);
+
+  try {
+    const res = await fetch("/api/upload", {
+      method: "POST",
+      body: formData,
+    });
+
+    const data = await res.json();
+
+    if (res.ok) {
+      const markdownLink = `\n\n📎 **Recurso:** [${file.name}](${data.url})`;
+      
+      setNewLessonContent((prev) => prev + markdownLink);
+    }
+  } catch (error) {
+    console.error("Error al subir archivo:", error);
+  }
+};
 
   const [course, setCourse] = useState<{ title: string; description: string } | null>(null);
   const [lessons, setLessons] = useState<Lesson[]>([]);
@@ -237,6 +254,7 @@ export default function ManageCoursePage() {
               </div>
             </CardContent>
           </Card>
+
           <Card className="bg-primary/5 border-primary/20">
             <CardContent className="py-4 flex items-center gap-3">
               <HelpCircle className="w-6 h-6 text-primary" />
@@ -246,12 +264,23 @@ export default function ManageCoursePage() {
               </div>
             </CardContent>
           </Card>
-                    <Card className="bg-primary/5 border-primary/20">
+          
+          <Card className="bg-primary/5 border-primary/20">
             <CardContent className="py-4 flex items-center gap-3">
               <HelpCircle className="w-6 h-6 text-primary" />
               <div>
                 <p className="text-xl font-bold">{questions.length}</p>
-                <p className="text-xs text-muted-foreground">Preguntas</p>
+                <p className="text-xs text-muted-foreground">PLACEHOLDER FILL</p>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card className="bg-primary/5 border-primary/20">
+            <CardContent className="py-4 flex items-center gap-3">
+              <HelpCircle className="w-6 h-6 text-primary" />
+              <div>
+                <p className="text-xl font-bold">{questions.length}</p>
+                <p className="text-xs text-muted-foreground">PLACEHOLDER STATS</p>
               </div>
             </CardContent>
           </Card>
@@ -333,7 +362,9 @@ export default function ManageCoursePage() {
                   <Label htmlFor="lesson-content">Contenido</Label>
                   {previewModeLesson ? (
                     <div data-placeholder="Contenido teórico de la lección (soporta Markdown)..." className="max-w-none w-full min-w-0 min-h-30 px-3 py-2 text-sm rounded-md border border-input shadow-xs transition-[color,box-shadow] text-foreground overflow-y-auto prose prose-slate dark:prose-invert empty:before:content-[attr(data-placeholder)] empty:before:text-muted-foreground">
-                      <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                      {/* --- _BLANK MAKES LINKS OPEN ON NEW TAB --- */}
+                      <ReactMarkdown remarkPlugins={[remarkGfm]} components={{ a: ({ node, ...props }) => (
+                        <a {...props} target="_blank" rel="noopener noreferrer" className="text-primary underline cursor-pointer" />)}}>
                         {newLessonContent}
                       </ReactMarkdown>
                     </div>
@@ -354,7 +385,7 @@ export default function ManageCoursePage() {
                     <Plus className="w-4 h-4 mr-2" />
                     {lessonLoading ? "Creando lección..." : "Añadir lección"}
                   </Button>
-                  {/* NUEVO BOTÓN DESPLEGABLE PARA ARCHIVOS */}
+                  {/* --- NEW ATTACHMENT BUTTON --- */}
       <Button variant="outline" className="shrink-0" onClick={handleFileClick}>
         <Paperclip className="w-4 h-4 mr-2" />
         Adjuntar
