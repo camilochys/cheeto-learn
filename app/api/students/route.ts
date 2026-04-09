@@ -12,23 +12,27 @@ export async function GET(request: Request) {
       return NextResponse.json({ error: "No autorizado." }, { status: 403 });
     }
 
-    // --- GET ALL COURSES FROM THIS TEACHER ---
     const courses = await prisma.course.findMany({
       where: { teacherId: payload.id },
       include: {
         enrollments: {
           include: {
             student: {
-              select: {
-                id: true,
-                name: true,
-                email: true,
-              }
+              select: { id: true, name: true, email: true }
             },
             course: {
+              select: { id: true, title: true }
+            }
+          }
+        },
+        questions: {
+          include: {
+            answers: {
               select: {
-                id: true,
-                title: true,
+                isCorrect: true,
+                responseTime: true,
+                studentId: true,
+                answeredAt: true
               }
             }
           }
@@ -36,17 +40,45 @@ export async function GET(request: Request) {
       }
     });
 
-    // --- FLATTEN ENROLLMENTS ---
     const students = courses.flatMap((course) =>
-      course.enrollments.map((enrollment) => ({
-        studentId: enrollment.student.id,
-        studentName: enrollment.student.name,
-        studentEmail: enrollment.student.email,
-        courseId: enrollment.course.id,
-        courseTitle: enrollment.course.title,
-        currentLevel: enrollment.currentLevel,
-        enrolledAt: enrollment.enrolledAt,
-      }))
+      course.enrollments.map((enrollment) => {
+        // --- GET ALL ANSWERS FROM THIS STUDENT IN THIS COURSE ---
+        const studentAnswers = course.questions.flatMap((q) =>
+          q.answers.filter((a) => a.studentId === enrollment.student.id)
+        );
+
+        const totalAnswers = studentAnswers.length;
+        const correctAnswers = studentAnswers.filter((a) => a.isCorrect).length;
+        const incorrectAnswers = totalAnswers - correctAnswers;
+        const percentage = totalAnswers > 0 ? Math.round((correctAnswers / totalAnswers) * 100) : 0;
+        const avgResponseTime = totalAnswers > 0
+          ? Math.round(studentAnswers.reduce((acc, a) => acc + (a.responseTime ?? 0), 0) / totalAnswers)
+          : 0;
+
+        // --- HARDEST QUESTIONS (most failures) ---
+        const questionFailures = course.questions.map((q) => ({
+          question: q.question,
+          failures: q.answers.filter((a) => a.studentId === enrollment.student.id && !a.isCorrect).length
+        })).filter((q) => q.failures > 0).sort((a, b) => b.failures - a.failures).slice(0, 3);
+
+        return {
+          studentId: enrollment.student.id,
+          studentName: enrollment.student.name,
+          studentEmail: enrollment.student.email,
+          courseId: enrollment.course.id,
+          courseTitle: enrollment.course.title,
+          currentLevel: enrollment.currentLevel,
+          enrolledAt: enrollment.enrolledAt,
+          stats: {
+            totalAnswers,
+            correctAnswers,
+            incorrectAnswers,
+            percentage,
+            avgResponseTime,
+            hardestQuestions: questionFailures
+          }
+        };
+      })
     );
 
     return NextResponse.json({ data: students }, { status: 200 });
