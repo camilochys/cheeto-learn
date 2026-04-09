@@ -43,7 +43,7 @@ export function CourseCard({ id, title, description, currentLevel, role }: Cours
         )}
         {role === "STUDENT" ? (
           <Link href={`/dashboard/exercise/${id}`}>
-            <Button className="w-full mt-2">Practicar ahora</Button>
+            <Button className="w-full mt-2">Ver curso</Button>
           </Link>
         ) : (
           <Link href={`/teacher/courses/${id}`}>
