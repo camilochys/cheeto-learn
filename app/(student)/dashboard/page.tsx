@@ -117,7 +117,7 @@ export default function DashboardPage() {
         </div>
       </div>
       <Link href="/progress">
-        <Button variant="outline" size="sm">
+        <Button size="sm">
           Ver progreso
         </Button>
       </Link>
