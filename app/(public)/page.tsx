@@ -147,10 +147,13 @@ export default function Home() {
           <p className="text-secondary-foreground/80 max-w-xl mx-auto">
             Únete a miles de estudiantes y profesores que ya utilizan CheetoLearn para alcanzar sus metas cognitivas, organizativas y laborales.
           </p>
+          <Link href={isLoggedIn ? (role === "TEACHER" ? "/teacher" : "/dashboard") : "/login"}>
           <Button size="lg" className="bg-primary text-primary-foreground hover:bg-accent">
-            ¡30 días de acceso gratuito por primer registro!
+            ¡Únete ahora!
             <ArrowRight className="w-4 h-4 ml-2" />
           </Button>
+          </Link>
+              
         </div>
       </section>
 
