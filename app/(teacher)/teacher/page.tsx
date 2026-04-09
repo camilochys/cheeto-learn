@@ -119,6 +119,13 @@ export default function TeacherPage() {
             </div>
 
               <div className="align-top">
+                <Link href="/students">
+                  <Button variant="outline">
+                    <Users className="w-4 h-4 mr-2" />
+                    Ver alumnos
+                  </Button>
+                </Link>
+                
                 <Link href="/teacher/courses/new">
                   <Button className="space-x-3">
                     <Plus className="w-4 h-4 mr-2" />
