@@ -28,6 +28,7 @@ export type FileMinAggregateOutputType = {
   id: string | null
   name: string | null
   url: string | null
+  path: string | null
   lessonId: string | null
 }
 
@@ -35,6 +36,7 @@ export type FileMaxAggregateOutputType = {
   id: string | null
   name: string | null
   url: string | null
+  path: string | null
   lessonId: string | null
 }
 
@@ -42,6 +44,7 @@ export type FileCountAggregateOutputType = {
   id: number
   name: number
   url: number
+  path: number
   lessonId: number
   _all: number
 }
@@ -51,6 +54,7 @@ export type FileMinAggregateInputType = {
   id?: true
   name?: true
   url?: true
+  path?: true
   lessonId?: true
 }
 
@@ -58,6 +62,7 @@ export type FileMaxAggregateInputType = {
   id?: true
   name?: true
   url?: true
+  path?: true
   lessonId?: true
 }
 
@@ -65,6 +70,7 @@ export type FileCountAggregateInputType = {
   id?: true
   name?: true
   url?: true
+  path?: true
   lessonId?: true
   _all?: true
 }
@@ -145,6 +151,7 @@ export type FileGroupByOutputType = {
   id: string
   name: string
   url: string
+  path: string | null
   lessonId: string
   _count: FileCountAggregateOutputType | null
   _min: FileMinAggregateOutputType | null
@@ -173,6 +180,7 @@ export type FileWhereInput = {
   id?: Prisma.StringFilter<"File"> | string
   name?: Prisma.StringFilter<"File"> | string
   url?: Prisma.StringFilter<"File"> | string
+  path?: Prisma.StringNullableFilter<"File"> | string | null
   lessonId?: Prisma.StringFilter<"File"> | string
   lesson?: Prisma.XOR<Prisma.LessonScalarRelationFilter, Prisma.LessonWhereInput>
 }
@@ -181,6 +189,7 @@ export type FileOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
   url?: Prisma.SortOrder
+  path?: Prisma.SortOrderInput | Prisma.SortOrder
   lessonId?: Prisma.SortOrder
   lesson?: Prisma.LessonOrderByWithRelationInput
 }
@@ -192,6 +201,7 @@ export type FileWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.FileWhereInput | Prisma.FileWhereInput[]
   name?: Prisma.StringFilter<"File"> | string
   url?: Prisma.StringFilter<"File"> | string
+  path?: Prisma.StringNullableFilter<"File"> | string | null
   lessonId?: Prisma.StringFilter<"File"> | string
   lesson?: Prisma.XOR<Prisma.LessonScalarRelationFilter, Prisma.LessonWhereInput>
 }, "id">
@@ -200,6 +210,7 @@ export type FileOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
   url?: Prisma.SortOrder
+  path?: Prisma.SortOrderInput | Prisma.SortOrder
   lessonId?: Prisma.SortOrder
   _count?: Prisma.FileCountOrderByAggregateInput
   _max?: Prisma.FileMaxOrderByAggregateInput
@@ -213,6 +224,7 @@ export type FileScalarWhereWithAggregatesInput = {
   id?: Prisma.StringWithAggregatesFilter<"File"> | string
   name?: Prisma.StringWithAggregatesFilter<"File"> | string
   url?: Prisma.StringWithAggregatesFilter<"File"> | string
+  path?: Prisma.StringNullableWithAggregatesFilter<"File"> | string | null
   lessonId?: Prisma.StringWithAggregatesFilter<"File"> | string
 }
 
@@ -220,6 +232,7 @@ export type FileCreateInput = {
   id?: string
   name: string
   url: string
+  path?: string | null
   lesson: Prisma.LessonCreateNestedOneWithoutFilesInput
 }
 
@@ -227,6 +240,7 @@ export type FileUncheckedCreateInput = {
   id?: string
   name: string
   url: string
+  path?: string | null
   lessonId: string
 }
 
@@ -234,6 +248,7 @@ export type FileUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   url?: Prisma.StringFieldUpdateOperationsInput | string
+  path?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lesson?: Prisma.LessonUpdateOneRequiredWithoutFilesNestedInput
 }
 
@@ -241,6 +256,7 @@ export type FileUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   url?: Prisma.StringFieldUpdateOperationsInput | string
+  path?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lessonId?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
@@ -248,6 +264,7 @@ export type FileCreateManyInput = {
   id?: string
   name: string
   url: string
+  path?: string | null
   lessonId: string
 }
 
@@ -255,12 +272,14 @@ export type FileUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   url?: Prisma.StringFieldUpdateOperationsInput | string
+  path?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type FileUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   url?: Prisma.StringFieldUpdateOperationsInput | string
+  path?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lessonId?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
@@ -278,6 +297,7 @@ export type FileCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
   url?: Prisma.SortOrder
+  path?: Prisma.SortOrder
   lessonId?: Prisma.SortOrder
 }
 
@@ -285,6 +305,7 @@ export type FileMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
   url?: Prisma.SortOrder
+  path?: Prisma.SortOrder
   lessonId?: Prisma.SortOrder
 }
 
@@ -292,6 +313,7 @@ export type FileMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
   url?: Prisma.SortOrder
+  path?: Prisma.SortOrder
   lessonId?: Prisma.SortOrder
 }
 
@@ -341,12 +363,14 @@ export type FileCreateWithoutLessonInput = {
   id?: string
   name: string
   url: string
+  path?: string | null
 }
 
 export type FileUncheckedCreateWithoutLessonInput = {
   id?: string
   name: string
   url: string
+  path?: string | null
 }
 
 export type FileCreateOrConnectWithoutLessonInput = {
@@ -382,6 +406,7 @@ export type FileScalarWhereInput = {
   id?: Prisma.StringFilter<"File"> | string
   name?: Prisma.StringFilter<"File"> | string
   url?: Prisma.StringFilter<"File"> | string
+  path?: Prisma.StringNullableFilter<"File"> | string | null
   lessonId?: Prisma.StringFilter<"File"> | string
 }
 
@@ -389,24 +414,28 @@ export type FileCreateManyLessonInput = {
   id?: string
   name: string
   url: string
+  path?: string | null
 }
 
 export type FileUpdateWithoutLessonInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   url?: Prisma.StringFieldUpdateOperationsInput | string
+  path?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type FileUncheckedUpdateWithoutLessonInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   url?: Prisma.StringFieldUpdateOperationsInput | string
+  path?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type FileUncheckedUpdateManyWithoutLessonInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   url?: Prisma.StringFieldUpdateOperationsInput | string
+  path?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 
@@ -415,6 +444,7 @@ export type FileSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   id?: boolean
   name?: boolean
   url?: boolean
+  path?: boolean
   lessonId?: boolean
   lesson?: boolean | Prisma.LessonDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["file"]>
@@ -423,6 +453,7 @@ export type FileSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   id?: boolean
   name?: boolean
   url?: boolean
+  path?: boolean
   lessonId?: boolean
   lesson?: boolean | Prisma.LessonDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["file"]>
@@ -431,6 +462,7 @@ export type FileSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   id?: boolean
   name?: boolean
   url?: boolean
+  path?: boolean
   lessonId?: boolean
   lesson?: boolean | Prisma.LessonDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["file"]>
@@ -439,10 +471,11 @@ export type FileSelectScalar = {
   id?: boolean
   name?: boolean
   url?: boolean
+  path?: boolean
   lessonId?: boolean
 }
 
-export type FileOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "url" | "lessonId", ExtArgs["result"]["file"]>
+export type FileOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "url" | "path" | "lessonId", ExtArgs["result"]["file"]>
 export type FileInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   lesson?: boolean | Prisma.LessonDefaultArgs<ExtArgs>
 }
@@ -462,6 +495,7 @@ export type $FilePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     id: string
     name: string
     url: string
+    path: string | null
     lessonId: string
   }, ExtArgs["result"]["file"]>
   composites: {}
@@ -890,6 +924,7 @@ export interface FileFieldRefs {
   readonly id: Prisma.FieldRef<"File", 'String'>
   readonly name: Prisma.FieldRef<"File", 'String'>
   readonly url: Prisma.FieldRef<"File", 'String'>
+  readonly path: Prisma.FieldRef<"File", 'String'>
   readonly lessonId: Prisma.FieldRef<"File", 'String'>
 }
     

@@ -1,19 +1,19 @@
 "use client";
 
-import { useEffect, useState, useRef } from "react";
-import { useParams, useRouter } from "next/navigation";
-import { useAuth } from "@/hooks/useAuth";
-import { useFade } from "@/hooks/useFade";
 import { LoadingScreen } from "@/components/shared/LoadingScreen";
 import { Navbar } from "@/components/shared/Navbar";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Description } from "@/components/ui/description";
-import { Title } from "@/components/ui/title";
+import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Edit, Trash2, ArrowLeft, Plus, BookOpen, HelpCircle, Eye, PenLine, Paperclip, ImageIcon, Upload, File as FileIcon } from "lucide-react";
+import { Title } from "@/components/ui/title";
+import { useAuth } from "@/hooks/useAuth";
+import { useFade } from "@/hooks/useFade";
+import { ArrowLeft, BookOpen, Edit, Eye, HelpCircle, PenLine, Plus, SquarePen, Trash2 } from "lucide-react";
 import Link from "next/link";
+import { useParams, useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 
@@ -38,36 +38,6 @@ export default function ManageCoursePage() {
   const router = useRouter();
   const { token, isReady, fadingOut, logout } = useAuth({ requiredRole: "TEACHER" });
   const { visible, getFadeStyle } = useFade();
-
-  const fileInputRef = useRef<HTMLInputElement>(null);
-  const handleFileClick = () => {
-  fileInputRef.current?.click();
-  };
-
-const onFileSelected = async (e: React.ChangeEvent<HTMLInputElement>) => {
-  const file = e.target.files?.[0];
-  if (!file) return;
-
-  const formData = new FormData();
-  formData.append("file", file);
-
-  try {
-    const res = await fetch("/api/upload", {
-      method: "POST",
-      body: formData,
-    });
-
-    const data = await res.json();
-
-    if (res.ok) {
-      const markdownLink = `\n\n📎 **Recurso:** [${file.name}](${data.url})`;
-      
-      setNewLessonContent((prev) => prev + markdownLink);
-    }
-  } catch (error) {
-    console.error("Error al subir archivo:", error);
-  }
-};
 
   const [course, setCourse] = useState<{ title: string; description: string } | null>(null);
   const [lessons, setLessons] = useState<Lesson[]>([]);
@@ -253,7 +223,7 @@ const onFileSelected = async (e: React.ChangeEvent<HTMLInputElement>) => {
       <Navbar role="TEACHER" onLogout={logout} />
 
       <main className="max-w-4xl mx-auto px-4 py-12 space-y-6">
-        {/* --- HEADER --- */}
+        {/* --- HEADER SECTION --- */}
         <div className="flex items-center gap-4">
           <Link href="/teacher">
             <Button variant="ghost" size="sm">
@@ -346,7 +316,7 @@ const onFileSelected = async (e: React.ChangeEvent<HTMLInputElement>) => {
                 {/* --- TOGGLE PREVIEW BUTTON LESSONS --- */}
                 <div className="flex space-x-2 p-1 rounded-md shrink-0">
                   <Button
-                    variant={!previewModeLesson ? "secondary" : "ghost"}
+                    variant={!previewModeLesson ? "secondary" : "outline"}
                     size="sm"
                     onClick={() => setPreviewModeLesson(false)}
                     className="h-8 px-3"
@@ -354,7 +324,7 @@ const onFileSelected = async (e: React.ChangeEvent<HTMLInputElement>) => {
                     <PenLine className="w-4 h-4 mr-2" /> Editar
                   </Button>
                   <Button
-                    variant={previewModeLesson ? "secondary" : "ghost"}
+                    variant={previewModeLesson ? "secondary" : "outline"}
                     size="sm"
                     onClick={() => setPreviewModeLesson(true)}
                     className="h-8 px-3"
@@ -402,6 +372,21 @@ const onFileSelected = async (e: React.ChangeEvent<HTMLInputElement>) => {
                   )}
                 </div>
 
+                <div className="bg-primary/5 border border-primary/20 rounded-lg p-3 flex gap-3">
+                  <HelpCircle className="w-5 h-5 text-primary shrink-0 mt-0.5" />
+                  <div className="text-sm">
+                    <p className="font-medium text-primary">¿Quieres añadir recursos o archivos?</p>
+                    <p className="text-muted-foreground gap-1">
+                      Crea primero la base de la lección. Después, desde el botón de{" "}
+                      <SquarePen className="inline-flex w-4 h-4" />{" "}
+                      <strong className="">
+                        Editar
+                      </strong>{" "}
+                      podrás subir archivos adjuntos.
+                    </p>
+                  </div>
+                </div>
+
                 {lessonError && <p className="text-sm text-destructive">{lessonError}</p>}
                 
                 <div className="flex gap-3 pt-2">
@@ -409,22 +394,9 @@ const onFileSelected = async (e: React.ChangeEvent<HTMLInputElement>) => {
                     <Plus className="w-4 h-4 mr-2" />
                     {lessonLoading ? "Creando lección..." : "Añadir lección"}
                   </Button>
-                  {/* --- NEW ATTACHMENT BUTTON --- */}
-      <Button variant="outline" className="shrink-0" onClick={handleFileClick}>
-        <Paperclip className="w-4 h-4 mr-2" />
-        Adjuntar
-      </Button>
                 </div>
               </CardContent>
             </Card>
-
-      <input
-        type="file"
-        ref={fileInputRef}
-        onChange={onFileSelected}
-        className="hidden"
-        accept=".pdf,.png,.jpg,.jpeg,.zip,.7z,.rar"
-      />
 
             <div className="space-y-3">
               {lessons.length === 0 ? (
@@ -452,14 +424,14 @@ const onFileSelected = async (e: React.ChangeEvent<HTMLInputElement>) => {
                       {/* --- ACTION BUTTON --- */}
                       <div className="flex items-center gap-2 shrink-0">
                         <Link href={`/teacher/courses/${courseId}/lessons/${lesson.id}`}>
-                          <Button variant="ghost" size="icon" className="h-8 w-8 text-blue-600 hover:text-blue-800 hover:bg-blue-100">
+                          <Button variant="outline" size="icon" className="h-8 w-8 text-primary hover:secondary hover:secondary">
                             <Edit className="h-4 w-4" />
                           </Button>
                         </Link>
                         <Button 
-                          variant="ghost" 
+                          variant="outline" 
                           size="icon" 
-                          className="h-8 w-8 text-red-600 hover:text-red-800 hover:bg-red-100"
+                          className="h-8 w-8 text-red-600 hover:text-red-600 hover:bg-red-200"
                           onClick={() => handleDeleteLesson(lesson.id)}
                         >
                           <Trash2 className="h-4 w-4" />
@@ -484,7 +456,7 @@ const onFileSelected = async (e: React.ChangeEvent<HTMLInputElement>) => {
                 {/* --- TOGGLE PREVIEW BUTTON QUESTIONS --- */}
                 <div className="flex space-x-2 p-1 rounded-md shrink-0">
                   <Button
-                    variant={!previewModeQuestion ? "secondary" : "ghost"}
+                    variant={!previewModeQuestion ? "secondary" : "outline"}
                     size="sm"
                     onClick={() => setPreviewModeQuestion(false)}
                     className="h-8 px-3"
@@ -492,7 +464,7 @@ const onFileSelected = async (e: React.ChangeEvent<HTMLInputElement>) => {
                     <PenLine className="w-4 h-4 mr-2" /> Editar
                   </Button>
                   <Button
-                    variant={previewModeQuestion ? "secondary" : "ghost"}
+                    variant={previewModeQuestion ? "secondary" : "outline"}
                     size="sm"
                     onClick={() => setPreviewModeQuestion(true)}
                     className="h-8 px-3"
