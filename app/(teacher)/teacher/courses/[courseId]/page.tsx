@@ -12,7 +12,7 @@ import { Input } from "@/components/ui/input";
 import { Description } from "@/components/ui/description";
 import { Title } from "@/components/ui/title";
 import { Label } from "@/components/ui/label";
-import { ArrowLeft, Plus, BookOpen, HelpCircle, Eye, PenLine, Paperclip, ImageIcon, Upload, File as FileIcon } from "lucide-react";
+import { Edit, Trash2, ArrowLeft, Plus, BookOpen, HelpCircle, Eye, PenLine, Paperclip, ImageIcon, Upload, File as FileIcon } from "lucide-react";
 import Link from "next/link";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
@@ -166,6 +166,30 @@ const onFileSelected = async (e: React.ChangeEvent<HTMLInputElement>) => {
     setNewLessonContent("");
     setPreviewModeLesson(false);
     setLessonLoading(false);
+  }
+
+  async function handleDeleteLesson(lessonId: string) {
+    // --- SAFETY BROWSER LAYER ---
+    const confirmDelete = window.confirm("¿Estás seguro de que quieres borrar esta lección? Esta acción no se puede deshacer.");
+    if (!confirmDelete) return;
+
+    try {
+      const res = await fetch(`/api/lessons/${lessonId}`, {
+        method: "DELETE",
+        headers: { Authorization: `Bearer ${token}` }
+      });
+
+      if (res.ok) {
+        // --- FILTER DELETED LESSON FOR ACTUAL STATE, NO REFRESH ---
+        setLessons((prev) => prev.filter((l) => l.id !== lessonId));
+      } else {
+        const data = await res.json();
+        alert(`Error al borrar: ${data.error}`);
+      }
+    } catch (error) {
+      console.error("Error borrando lección:", error);
+      alert("Error de red al intentar borrar la lección.");
+    }
   }
 
   async function handleCreateQuestion() {
@@ -424,10 +448,26 @@ const onFileSelected = async (e: React.ChangeEvent<HTMLInputElement>) => {
                           )}
                         </div>
                       </div>
+                      
+                      {/* --- ACTION BUTTON --- */}
+                      <div className="flex items-center gap-2 shrink-0">
+                        <Link href={`/teacher/courses/${courseId}/lessons/${lesson.id}`}>
+                          <Button variant="ghost" size="icon" className="h-8 w-8 text-blue-600 hover:text-blue-800 hover:bg-blue-100">
+                            <Edit className="h-4 w-4" />
+                          </Button>
+                        </Link>
+                        <Button 
+                          variant="ghost" 
+                          size="icon" 
+                          className="h-8 w-8 text-red-600 hover:text-red-800 hover:bg-red-100"
+                          onClick={() => handleDeleteLesson(lesson.id)}
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      </div>
                     </CardContent>
                   </Card>
-                ))
-              )}
+                )))}
             </div>
           </div>
         )}

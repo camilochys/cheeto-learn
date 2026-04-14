@@ -6,7 +6,7 @@ import { useFade } from "@/hooks/useFade";
 import { LoadingScreen } from "@/components/shared/LoadingScreen";
 import { Navbar } from "@/components/shared/Navbar";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { BarChart3, TrendingUp, Target, BookOpen } from "lucide-react";
+import { TrendingUp, Target, BookOpen } from "lucide-react";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, LineChart, Line, CartesianGrid } from "recharts";
 
 interface CourseProgress {
