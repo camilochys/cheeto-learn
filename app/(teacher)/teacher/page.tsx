@@ -118,7 +118,7 @@ export default function TeacherPage() {
               <p className="text-muted-foreground">Gestiona tus cursos y alumnos</p>
             </div>
 
-              <div className="align-top">
+              <div className="flex space-x-2 p-1 rounded-md shrink-0">
                 <Link href="/students">
                   <Button variant="outline">
                     <Users className="w-4 h-4 mr-2" />

@@ -44,7 +44,7 @@ async function handleLogin() {
 localStorage.setItem("token", data.data.token);
 localStorage.setItem("role", data.data.role);
 
-    // Fade out antes de redirigir
+// --- FADE OUT REDIRECT ---
     setFadingOut(true);
     setTimeout(() => {
       if (data.role === "TEACHER") {
