@@ -45,8 +45,15 @@ export async function GET(request: Request) {
             return NextResponse.json({ error: auth.error }, { status: auth.status });
         }
 
-        const course = await prisma.course.findMany();
-        return NextResponse.json({ data: course }, { status: 200 });
+        const courses = await prisma.course.findMany({
+            include: {
+                _count: {
+                    select: { lessons: true }
+                }
+            }
+        });
+        
+        return NextResponse.json({ data: courses }, { status: 200 });
     } catch (error) {
         console.log(error);
         return NextResponse.json({ error: "Error interno del servidor." }, { status: 500 });
