@@ -86,13 +86,26 @@ export default function ManageCoursePage() {
     if (found) setCourse({ title: found.title, description: found.description });
   }
 
-  async function fetchLessons(token: string) {
-    const res = await fetch(`/api/lessons?courseId=${courseId}`, {
-      headers: { Authorization: `Bearer ${token}` }
-    });
+async function fetchLessons(token: string) {
+  const res = await fetch(`/api/lessons?courseId=${courseId}`, {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+  
+  if (res.ok) {
     const data = await res.json();
-    if (res.ok) setLessons(data.data);
+    const rawLessons = data.data || [];
+
+    const sorted = [...rawLessons].sort((a: any, b: any) => {
+      const orderA = Number(a.order) || 0;
+      const orderB = Number(b.order) || 0;
+      if (orderA !== orderB) return orderA - orderB;
+      
+      return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
+    });
+
+    setLessons(sorted);
   }
+}
 
   async function fetchQuestions(token: string) {
     const res = await fetch(`/api/questions?courseId=${courseId}`, {
@@ -131,7 +144,10 @@ export default function ManageCoursePage() {
       return;
     }
 
-    setLessons([...lessons, data.data]);
+setLessons((prev) => {
+    const newList = [...prev, data.data];
+    return newList.sort((a, b) => (Number(a.order) || 0) - (Number(b.order) || 0));
+});
     setNewLessonTitle("");
     setNewLessonContent("");
     setPreviewModeLesson(false);
