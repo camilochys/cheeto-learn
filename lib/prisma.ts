@@ -1,6 +1,6 @@
 // --- PRISMA CHECKING IF THERE IS ALREADY A GLOBALTHIS, IF YES, RECYCLE AND REUSE, IF NOT, CREATES AND SAVES ---
 // --- PRISMA WITH PG DRIVER ADAPTER (PRISMA 7) ---
-import { PrismaClient } from "./generated/prisma";
+import { PrismaClient } from "@prisma/client";
 import { PrismaPg } from "@prisma/adapter-pg";
 import { Pool } from "pg";
 
