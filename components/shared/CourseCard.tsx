@@ -1,5 +1,5 @@
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { BookOpen, ClipboardList } from "lucide-react";
 import Link from "next/link";
 
@@ -42,17 +42,23 @@ export function CourseCard({ id, title, description, currentLevel, role }: Cours
           </div>
         )}
         {role === "STUDENT" ? (
-  <div className="grid grid-cols-2 gap-2 mt-2">
+  <div className="grid grid-cols-3 gap-1 mt-4">
     <Link href={`/dashboard/course/${id}`}>
       <Button variant="outline" className="w-full">
-        Ver contenido
+        Contenido
       </Button>
     </Link>
     
     <Link href={`/dashboard/exercise/${id}`}>
       <Button className="w-full">
-        Hacer Test
+        Test
       </Button>
+    </Link>
+
+    <Link href={`/dashboard/assignment/${id}`}>
+    <Button variant="outline" className="w-full">
+      Tareas
+    </Button>
     </Link>
   </div>
         ) : (
