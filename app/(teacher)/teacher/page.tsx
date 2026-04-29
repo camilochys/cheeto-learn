@@ -1,21 +1,23 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { useAuth } from "@/hooks/useAuth";
-import { useFade } from "@/hooks/useFade";
+import { CourseCard } from "@/components/shared/CourseCard";
 import { LoadingScreen } from "@/components/shared/LoadingScreen";
 import { Navbar } from "@/components/shared/Navbar";
-import { CourseCard } from "@/components/shared/CourseCard";
-import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { BookOpen, Users, Plus, BarChart3 } from "lucide-react";
+import { Card, CardContent } from "@/components/ui/card";
+import { useAuth } from "@/hooks/useAuth";
+import { useFade } from "@/hooks/useFade";
+import { BarChart3, BookOpen, Plus, Users } from "lucide-react";
 import Link from "next/link";
+import { useEffect, useState } from "react";
 
 interface Course {
   id: string;
   title: string;
   description: string;
   createdAt: string;
+  enrolledCount: number;
+  answersCount: number;
 }
 
 export default function TeacherPage() {
@@ -23,6 +25,13 @@ export default function TeacherPage() {
   const { visible, getFadeStyle } = useFade();
   const [courses, setCourses] = useState<Course[]>([]);
   const [loading, setLoading] = useState(true);
+const totalStudents = courses?.length > 0 
+  ? courses.reduce((acc, course) => acc + (course.enrolledCount || 0), 0) 
+  : 0;
+
+const totalAnswers = courses?.length > 0 
+  ? courses.reduce((acc, course) => acc + (course.answersCount || 0), 0) 
+  : 0;
 
   useEffect(() => {
     if (!isReady || !token) return;
@@ -91,24 +100,26 @@ export default function TeacherPage() {
               </div>
             </CardContent>
           </Card>
-          <Card className="bg-primary/5 border-primary/20">
-            <CardContent className="py-6 flex items-center gap-4">
-              <Users className="w-8 h-8 text-primary" />
-              <div>
-                <p className="text-2xl font-bold text-foreground">—</p>
-                <p className="text-sm text-muted-foreground">Alumnos inscritos</p>
-              </div>
-            </CardContent>
-          </Card>
-          <Card className="bg-primary/5 border-primary/20">
-            <CardContent className="py-6 flex items-center gap-4">
-              <BarChart3 className="w-8 h-8 text-primary" />
-              <div>
-                <p className="text-2xl font-bold text-foreground">—</p>
-                <p className="text-sm text-muted-foreground">Respuestas totales</p>
-              </div>
-            </CardContent>
-          </Card>
+
+<Card className="bg-primary/5 border-primary/20">
+  <CardContent className="py-6 flex items-center gap-4">
+    <Users className="w-8 h-8 text-primary" />
+    <div>
+      <p className="text-2xl font-bold text-foreground">{totalStudents}</p>
+      <p className="text-sm text-muted-foreground">Alumnos inscritos</p>
+    </div>
+  </CardContent>
+</Card>
+
+<Card className="bg-primary/5 border-primary/20">
+  <CardContent className="py-6 flex items-center gap-4">
+    <BarChart3 className="w-8 h-8 text-primary" />
+    <div>
+      <p className="text-2xl font-bold text-foreground">{totalAnswers}</p>
+      <p className="text-sm text-muted-foreground">Respuestas totales</p>
+    </div>
+  </CardContent>
+</Card>
         </div>
 
         <div className="space-y-4">
