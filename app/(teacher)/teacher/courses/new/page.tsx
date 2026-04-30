@@ -53,7 +53,7 @@ export default function NewCoursePage() {
       return;
     }
 
-    router.push(`/courses/${data.data.id}`);
+    router.push(`/teacher/courses/${data.data.id}`);
   }
 
   if (!isReady) {
