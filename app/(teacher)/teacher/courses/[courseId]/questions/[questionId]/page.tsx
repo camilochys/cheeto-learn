@@ -97,6 +97,10 @@ export default function EditQuestionPage({ params }: PageProps) {
   }, [isReady, token, questionId, courseId]);
 
   const handleSave = async () => {
+    if (!question.trim() || !optionA.trim() || !optionB.trim() || !optionC.trim() || !optionD.trim()) {
+      setError("Todos los campos (pregunta y opciones) son obligatorios.");
+      return;
+    }
     setSaving(true);
     setError("");
     try {
