@@ -94,7 +94,7 @@ export default function EditQuestionPage({ params }: PageProps) {
     };
 
     loadData();
-  }, [isReady, token, questionId]);
+  }, [isReady, token, questionId, courseId]);
 
   const handleSave = async () => {
     setSaving(true);
@@ -132,107 +132,144 @@ export default function EditQuestionPage({ params }: PageProps) {
   }
 
   return (
-    <div className="min-h-screen bg-background" style={getFadeStyle(fadingOut)}>
+    <div className="min-h-screen bg-background transition-all duration-500" style={getFadeStyle(fadingOut)}>
       <Navbar role="TEACHER" onLogout={logout} />
-      <main className="max-w-4xl mx-auto px-4 py-12 space-y-6">
+      <main className="max-w-4xl mx-auto px-4 py-8 sm:py-12 space-y-6">
         
         {/* --- HEADER --- */}
-        <div className="flex items-center justify-between">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-card/50 p-4 rounded-xl border border-border/50 sm:bg-transparent sm:p-0 sm:border-none">
           <div className="flex items-center gap-4">
             <Link href={`/teacher/courses/${courseId}`}>
-              <Button variant="ghost" size="sm">
+              <Button variant="ghost" size="sm" className="hover:bg-accent transition-colors">
                 <ArrowLeft className="w-4 h-4 mr-2" />
-                Volver
+                <span className="hidden sm:inline">Volver</span>
               </Button>
             </Link>
-            <div>
-              <h1 className="text-3xl font-bold text-foreground">
+            <div className="space-y-1">
+              <h1 className="text-xl sm:text-3xl font-bold text-foreground tracking-tight line-clamp-1">
                 {course?.title || "Cargando curso..."}
               </h1>
-              <p className="text-muted-foreground text-sm">
-                Editando Pregunta de Evaluación
+              <p className="text-muted-foreground text-xs sm:text-sm font-medium uppercase tracking-wider">
+                Editando Pregunta
               </p>
             </div>
           </div>
 
-          <Button onClick={handleSave} disabled={saving}>
+          <Button 
+            onClick={handleSave} 
+            disabled={saving}
+            className="w-full sm:w-auto shadow-sm hover:shadow transition-all active:scale-95"
+          >
             <Save className="w-4 h-4 mr-2" />
             {saving ? "Guardando..." : "Guardar cambios"}
           </Button>
         </div>
 
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between">
-            <div>
-              <CardTitle>Editor de Pregunta</CardTitle>
+        <Card className="border-border/60 shadow-sm overflow-hidden">
+          <CardHeader className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-border/50">
+            <div className="space-y-1">
+              <CardTitle className="text-lg sm:text-xl">Editor de Pregunta</CardTitle>
               <CardDescription>Configura el enunciado y las opciones</CardDescription>
             </div>
-            <div className="flex space-x-2 p-1 rounded-md shrink-0">
-              <Button variant={!previewMode ? "secondary" : "outline"} size="sm" onClick={() => setPreviewMode(false)} className="h-8 px-3">
+            <div className="flex gap-2 bg-background/50 border border-border/50 p-1 rounded-lg shrink-0 w-full sm:w-auto">
+              <Button 
+                variant={!previewMode ? "secondary" : "ghost"} 
+                size="sm" 
+                onClick={() => setPreviewMode(false)} 
+                className="flex-1 sm:flex-none h-8 px-4 transition-all"
+              >
                 <PenLine className="w-4 h-4 mr-2" /> Editar
               </Button>
-              <Button variant={previewMode ? "secondary" : "outline"} size="sm" onClick={() => setPreviewMode(true)} className="h-8 px-3">
+              <Button 
+                variant={previewMode ? "secondary" : "ghost"} 
+                size="sm" 
+                onClick={() => setPreviewMode(true)} 
+                className="flex-1 sm:flex-none h-8 px-4 transition-all"
+              >
                 <Eye className="w-4 h-4 mr-2" /> Previsualizar
               </Button>
             </div>
           </CardHeader>
 
-          <CardContent className="space-y-6">
-            <div className="space-y-2">
-              <Label htmlFor="q-text">Enunciado de la pregunta</Label>
+          <CardContent className="p-4 sm:p-8 space-y-8">
+            <div className="space-y-3">
+              <Label htmlFor="q-text" className="text-sm font-semibold tracking-wide ml-1">Enunciado de la pregunta</Label>
               {previewMode ? (
-                <div className="max-w-none w-full min-w-0 px-3 py-2 text-sm rounded-md border border-input bg-muted/10 prose prose-slate dark:prose-invert">
-                  <ReactMarkdown remarkPlugins={[remarkGfm]}>{question}</ReactMarkdown>
+                <div className="max-w-none w-full min-w-0 px-4 py-4 text-sm rounded-xl border border-border bg-muted/20 prose prose-slate dark:prose-invert animate-in fade-in duration-300">
+                  <ReactMarkdown remarkPlugins={[remarkGfm]}>{question || "*Sin enunciado aún*"}</ReactMarkdown>
                 </div>
               ) : (
                 <Description 
                   id="q-text" 
                   placeholder="Escribe la pregunta (soporta Markdown)..." 
                   value={question} 
-                  onChange={(e) => setQuestion(e.target.value)} 
+                  onChange={(e) => setQuestion(e.target.value)}
+                  className="min-h-30 focus-visible:ring-primary/20 transition-all"
                 />
               )}
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label>Opción A</Label>
-                <Input value={optionA} onChange={(e) => setOptionA(e.target.value)} placeholder="Texto de la opción A" />
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 sm:gap-6">
+              <div className="space-y-2 group">
+                <Label className="text-xs font-bold text-muted-foreground group-focus-within:text-primary transition-colors ml-1 uppercase tracking-tighter">Opción A</Label>
+                <Input 
+                  value={optionA} 
+                  onChange={(e) => setOptionA(e.target.value)} 
+                  placeholder="Texto de la opción A" 
+                  className="bg-muted/5 focus-visible:ring-primary/20 transition-all"
+                />
               </div>
-              <div className="space-y-2">
-                <Label>Opción B</Label>
-                <Input value={optionB} onChange={(e) => setOptionB(e.target.value)} placeholder="Texto de la opción B" />
+              <div className="space-y-2 group">
+                <Label className="text-xs font-bold text-muted-foreground group-focus-within:text-primary transition-colors ml-1 uppercase tracking-tighter">Opción B</Label>
+                <Input 
+                  value={optionB} 
+                  onChange={(e) => setOptionB(e.target.value)} 
+                  placeholder="Texto de la opción B" 
+                  className="bg-muted/5 focus-visible:ring-primary/20 transition-all"
+                />
               </div>
-              <div className="space-y-2">
-                <Label>Opción C</Label>
-                <Input value={optionC} onChange={(e) => setOptionC(e.target.value)} placeholder="Texto de la opción C" />
+              <div className="space-y-2 group">
+                <Label className="text-xs font-bold text-muted-foreground group-focus-within:text-primary transition-colors ml-1 uppercase tracking-tighter">Opción C</Label>
+                <Input 
+                  value={optionC} 
+                  onChange={(e) => setOptionC(e.target.value)} 
+                  placeholder="Texto de la opción C" 
+                  className="bg-muted/5 focus-visible:ring-primary/20 transition-all"
+                />
               </div>
-              <div className="space-y-2">
-                <Label>Opción D</Label>
-                <Input value={optionD} onChange={(e) => setOptionD(e.target.value)} placeholder="Texto de la opción D" />
+              <div className="space-y-2 group">
+                <Label className="text-xs font-bold text-muted-foreground group-focus-within:text-primary transition-colors ml-1 uppercase tracking-tighter">Opción D</Label>
+                <Input 
+                  value={optionD} 
+                  onChange={(e) => setOptionD(e.target.value)} 
+                  placeholder="Texto de la opción D" 
+                  className="bg-muted/5 focus-visible:ring-primary/20 transition-all"
+                />
               </div>
             </div>
 
-            <div className="grid grid-cols-2 gap-4 pt-4 border-t border-border">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 pt-6 border-t border-border/60">
               <div className="space-y-2">
-                <Label>Respuesta correcta</Label>
+                <Label className="text-sm font-semibold ml-1">Respuesta correcta</Label>
                 <select
                   value={correctOption}
                   onChange={(e) => setCorrectOption(e.target.value)}
-                  className="w-full h-10 px-3 py-2 text-sm rounded-md border border-input bg-background"
+                  className="w-full h-11 px-4 py-2 text-sm rounded-xl border border-input bg-background focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all appearance-none cursor-pointer shadow-sm"
+                  style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' fill=\'none\' viewBox=\'0 0 24 24\' stroke=\'currentColor\'%3E%3Cpath stroke-linecap=\'round\' stroke-linejoin=\'round\' stroke-width=\'2\' d=\'M19 9l-7 7-7-7\'/%3E%3C/svg%3E")', backgroundRepeat: 'no-repeat', backgroundPosition: 'right 1rem center', backgroundSize: '1em' }}
                 >
-                  <option value="A">A</option>
-                  <option value="B">B</option>
-                  <option value="C">C</option>
-                  <option value="D">D</option>
+                  <option value="A">Opción A</option>
+                  <option value="B">Opción B</option>
+                  <option value="C">Opción C</option>
+                  <option value="D">Opción D</option>
                 </select>
               </div>
               <div className="space-y-2">
-                <Label>Nivel de dificultad</Label>
+                <Label className="text-sm font-semibold ml-1">Nivel de dificultad</Label>
                 <select
                   value={difficultyLevel}
                   onChange={(e) => setDifficultyLevel(Number(e.target.value))}
-                  className="w-full h-10 px-3 py-2 text-sm rounded-md border border-input bg-background"
+                  className="w-full h-11 px-4 py-2 text-sm rounded-xl border border-input bg-background focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all appearance-none cursor-pointer shadow-sm"
+                  style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' fill=\'none\' viewBox=\'0 0 24 24\' stroke=\'currentColor\'%3E%3Cpath stroke-linecap=\'round\' stroke-linejoin=\'round\' stroke-width=\'2\' d=\'M19 9l-7 7-7-7\'/%3E%3C/svg%3E")', backgroundRepeat: 'no-repeat', backgroundPosition: 'right 1rem center', backgroundSize: '1em' }}
                 >
                   <option value={1}>1 — Básico</option>
                   <option value={2}>2 — Elemental</option>
@@ -243,7 +280,11 @@ export default function EditQuestionPage({ params }: PageProps) {
               </div>
             </div>
 
-            {error && <p className="text-red-500 text-sm font-medium">{error}</p>}
+            {error && (
+              <div className="p-4 rounded-xl bg-destructive/10 border border-destructive/20 text-destructive text-sm font-medium animate-shake">
+                {error}
+              </div>
+            )}
           </CardContent>
         </Card>
       </main>

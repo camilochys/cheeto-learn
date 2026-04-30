@@ -1,15 +1,15 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { useAuth } from "@/hooks/useAuth";
-import { useFade } from "@/hooks/useFade";
+import { CourseCard } from "@/components/shared/CourseCard";
 import { LoadingScreen } from "@/components/shared/LoadingScreen";
 import { Navbar } from "@/components/shared/Navbar";
-import { CourseCard } from "@/components/shared/CourseCard";
-import { Card, CardContent } from "@/components/ui/card";
-import { BookOpen, BarChart3 } from "lucide-react";
-import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { useAuth } from "@/hooks/useAuth";
+import { useFade } from "@/hooks/useFade";
+import { BarChart3, BookOpen } from "lucide-react";
+import Link from "next/link";
+import { useEffect, useState } from "react";
 
 interface Course {
   id: string;
@@ -75,22 +75,24 @@ export default function DashboardPage() {
     >
       <Navbar role="STUDENT" onLogout={logout} />
 
-      <main className="max-w-6xl mx-auto px-4 py-12 space-y-8">
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 space-y-8">
         <div className="space-y-1">
-          <h1 className="text-3xl font-bold text-foreground">Mi aprendizaje</h1>
-          <p className="text-muted-foreground">Continúa donde lo dejaste</p>
+          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-foreground">Mi aprendizaje</h1>
+          <p className="text-sm sm:text-base text-muted-foreground">Continúa donde lo dejaste</p>
         </div>
 
         {enrollments.length === 0 ? (
-          <Card className="text-center py-16">
+          <Card className="text-center py-16 border-dashed">
             <CardContent className="space-y-4">
-              <BookOpen className="w-12 h-12 text-muted-foreground mx-auto" />
-              <p className="text-muted-foreground">No estás inscrito en ningún curso todavía.</p>
-              <p className="text-sm text-muted-foreground">Contacta con tu profesor para que te inscriba.</p>
+              <BookOpen className="w-12 h-12 text-muted-foreground/50 mx-auto" />
+              <div className="space-y-1">
+                <p className="text-muted-foreground font-medium">No estás inscrito en ningún curso todavía.</p>
+                <p className="text-sm text-muted-foreground/80">Contacta con tu profesor para que te inscriba.</p>
+              </div>
             </CardContent>
           </Card>
         ) : (
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
             {enrollments.map((course) => (
               <CourseCard
                 key={course.id}
@@ -104,26 +106,28 @@ export default function DashboardPage() {
           </div>
         )}
 
-<Card className="bg-primary/5 border-primary/20">
-  <CardContent className="py-6">
-    <div className="flex items-center justify-between">
-      <div className="flex items-center gap-4">
-        <BarChart3 className="w-8 h-8 text-primary" />
-        <div>
-          <p className="font-semibold text-foreground">Tu progreso en CheetoLearn</p>
-          <p className="text-sm text-muted-foreground">
-            Estás inscrito en {enrollments.length} {enrollments.length === 1 ? "curso" : "cursos"}. ¡Sigue practicando para subir de nivel!
-          </p>
-        </div>
-      </div>
-      <Link href="/progress">
-        <Button size="sm">
-          Ver progreso
-        </Button>
-      </Link>
-    </div>
-  </CardContent>
-</Card>
+        <Card className="bg-primary/5 border-primary/20 overflow-hidden">
+          <CardContent className="py-6 px-5 sm:px-6">
+            <div className="flex flex-col sm:flex-row items-center sm:justify-between gap-6 text-center sm:text-left">
+              <div className="flex flex-col sm:flex-row items-center gap-4 sm:gap-5">
+                <div className="p-3 bg-primary/10 rounded-2xl">
+                  <BarChart3 className="w-8 h-8 text-primary" />
+                </div>
+                <div className="space-y-1">
+                  <p className="font-semibold text-foreground text-lg">Tu progreso en CheetoLearn</p>
+                  <p className="text-sm text-muted-foreground max-w-md">
+                    Estás inscrito en {enrollments.length} {enrollments.length === 1 ? "curso" : "cursos"}. ¡Sigue practicando para subir de nivel!
+                  </p>
+                </div>
+              </div>
+              <Link href="/progress" className="w-full sm:w-auto">
+                <Button size="lg" className="w-full sm:w-auto shadow-lg shadow-primary/10 rounded-xl">
+                  Ver progreso
+                </Button>
+              </Link>
+            </div>
+          </CardContent>
+        </Card>
       </main>
     </div>
   );
