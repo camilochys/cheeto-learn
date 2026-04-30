@@ -1,11 +1,11 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { useRouter, useParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { CheckCircle, XCircle, ArrowRight, BookOpen } from "lucide-react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { ArrowLeft, ArrowRight, BookOpen, CheckCircle, XCircle } from "lucide-react";
 import Link from "next/link";
+import { useParams, useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 
 interface Question {
   id: string;
@@ -138,61 +138,68 @@ export default function ExercisePage() {
     >
       {/* --- NAVBAR --- */}
       <nav className="border-b border-border bg-card sticky top-0 z-50">
-        <div className="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
-          <Link href="/dashboard">
-            <img src="/cheeto_learn_logo.png" className="h-10" />
+        <div className="max-w-6xl mx-auto px-4 py-3 sm:py-4 flex items-center justify-between">
+          <Link href="/dashboard" className="shrink-0">
+            <img src="/cheeto_learn_logo.png" className="h-8 sm:h-10 w-auto" />
           </Link>
-          <div className="flex items-center gap-3">
-            <span className="text-xs bg-primary/10 text-primary px-3 py-1 rounded-full font-medium">
+          <div className="flex items-center gap-2 sm:gap-3">
+            <span className="text-[10px] sm:text-xs bg-primary/10 text-primary px-2 sm:px-3 py-1 rounded-full font-medium whitespace-nowrap">
               Nivel {currentLevel} / 5
             </span>
             <Link href="/dashboard">
-              <Button variant="ghost" size="sm">
-                <BookOpen className="w-4 h-4 mr-2" />
-                Mis cursos
+              <Button variant="ghost" size="sm" className="h-8 sm:h-9 px-2 sm:px-3 text-xs sm:text-sm">
+                <BookOpen className="w-3.5 h-3.5 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
+                <span className="hidden xs:inline">Mis cursos</span>
               </Button>
             </Link>
           </div>
         </div>
       </nav>
-
-      <main className="max-w-2xl mx-auto px-4 py-12 space-y-6">
+              
+      <main className="max-w-2xl mx-auto px-4 py-6 sm:py-12 space-y-6">
         {/* --- LEVEL BAR --- */}
-        <div className="space-y-1">
-          <div className="flex justify-between text-xs text-muted-foreground">
-            <span>Nivel actual</span>
+        <div className="space-y-1.5">
+            <div className="max-w-4xl w-full">
+              <Link href="/dashboard">
+                <Button variant="outline" size="sm" className="gap-2 bg-background shadow-sm hover:bg-accent transition-colors">
+                  <ArrowLeft className="w-4 h-4" /> Volver al panel
+                </Button>
+              </Link>
+            </div>
+          <div className="flex justify-between text-[10px] mt-4 sm:text-xs text-muted-foreground font-medium">
+            <span>PROGRESO DE NIVEL</span>
             <span>{currentLevel} / 5</span>
           </div>
-          <div className="w-full bg-muted rounded-full h-2">
+          <div className="w-full bg-muted rounded-full h-1.5 sm:h-2">
             <div
-              className="bg-primary h-2 rounded-full transition-all duration-500"
+              className="bg-primary h-1.5 sm:h-2 rounded-full transition-all duration-500 shadow-[0_0_8px_rgba(var(--primary),0.4)]"
               style={{ width: `${(currentLevel / 5) * 100}%` }}
             />
           </div>
         </div>
 
         {/* --- QUESTION CARD --- */}
-        <Card>
-          <CardHeader>
-            <div className="flex items-center justify-between mb-2">
-              <span className="text-xs text-muted-foreground">
+        <Card className="border-border/60 shadow-sm sm:shadow-md">
+          <CardHeader className="space-y-3 p-5 sm:p-6">
+            <div className="flex items-center justify-between">
+              <span className="text-[10px] sm:text-xs font-bold tracking-wider text-muted-foreground uppercase">
                 Dificultad {question?.difficultyLevel} / 5
               </span>
             </div>
-            <CardTitle className="text-xl leading-relaxed">
+            <CardTitle className="text-lg sm:text-xl md:text-2xl leading-snug sm:leading-relaxed font-semibold text-foreground">
               {question?.question}
             </CardTitle>
           </CardHeader>
-          <CardContent className="space-y-3">
+          <CardContent className="space-y-2.5 sm:space-y-3 p-5 sm:p-6 pt-0">
             {["A", "B", "C", "D"].map((option) => (
               <button
                 key={option}
                 onClick={() => handleAnswer(option)}
                 disabled={!!feedback || submitting}
-                className={`w-full text-left p-4 rounded-lg border-2 transition-all duration-200 ${getOptionStyle(option)}`}
+                className={`w-full text-left p-3.5 sm:p-4 rounded-xl border-2 text-sm sm:text-base transition-all duration-200 flex items-start gap-3 group ${getOptionStyle(option)}`}
               >
-                <span className="font-semibold text-primary mr-3">{option}.</span>
-                {getOptionLabel(option)}
+                <span className="font-bold text-primary shrink-0">{option}.</span>
+                <span className="flex-1 font-medium">{getOptionLabel(option)}</span>
               </button>
             ))}
           </CardContent>
@@ -200,36 +207,39 @@ export default function ExercisePage() {
 
         {/* --- FEEDBACK --- */}
         {feedback && (
-          <Card className={`border-2 transition-all duration-300 ${feedback.isCorrect ? "border-green-500 bg-green-500/5" : "border-destructive bg-destructive/5"}`}>
-            <CardContent className="py-6">
-              <div className="flex items-start gap-4">
-                {feedback.isCorrect
-                  ? <CheckCircle className="w-6 h-6 text-green-500 mt-0.5 shrink-0" />
-                  : <XCircle className="w-6 h-6 text-destructive mt-0.5 shrink-0" />
-                }
-                <div className="flex-1 space-y-1">
-                  <p className="font-semibold">
-                    {feedback.isCorrect ? "¡Correcto! 🎉" : "Incorrecto"}
-                  </p>
-                  {!feedback.isCorrect && (
-                    <p className="text-sm text-muted-foreground">
-                      La respuesta correcta era <span className="font-semibold text-foreground">{feedback.correctOption}. {getOptionLabel(feedback.correctOption)}</span>
+          <Card className={`border-2 animate-in fade-in slide-in-from-bottom-4 duration-300 ${feedback.isCorrect ? "border-green-500 bg-green-500/5" : "border-destructive bg-destructive/5"}`}>
+            <CardContent className="p-4 sm:p-6">
+              <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
+                <div className="flex items-start gap-4 flex-1">
+                  {feedback.isCorrect
+                    ? <CheckCircle className="w-6 h-6 text-green-500 mt-0.5 shrink-0" />
+                    : <XCircle className="w-6 h-6 text-destructive mt-0.5 shrink-0" />
+                  }
+                  <div className="space-y-1">
+                    <p className="font-bold text-base sm:text-lg">
+                      {feedback.isCorrect ? "¡Correcto! 🎉" : "Casi lo tienes"}
                     </p>
-                  )}
-                  {feedback.newLevel !== currentLevel && (
-                    <p className="text-sm font-medium text-primary">
-                      {feedback.newLevel > currentLevel
-                        ? `¡Has subido al nivel ${feedback.newLevel}! 🚀`
-                        : `Has bajado al nivel ${feedback.newLevel}`
-                      }
-                    </p>
-                  )}
+                    {!feedback.isCorrect && (
+                      <p className="text-sm text-muted-foreground leading-snug">
+                        La correcta era: <span className="font-bold text-foreground">{feedback.correctOption}. {getOptionLabel(feedback.correctOption)}</span>
+                      </p>
+                    )}
+                    {feedback.newLevel !== currentLevel && (
+                      <p className="text-xs sm:text-sm font-bold text-primary animate-pulse">
+                        {feedback.newLevel > currentLevel
+                          ? `¡Nivel ${feedback.newLevel} alcanzado! 🚀`
+                          : `Nivel actual: ${feedback.newLevel}`
+                        }
+                      </p>
+                    )}
+                  </div>
                 </div>
                 <Button
                   onClick={() => fetchNextQuestion(localStorage.getItem("token")!)}
-                  size="sm"
+                  className="w-full sm:w-auto font-bold px-8 h-11 sm:h-10"
+                  size="default"
                 >
-                  Siguiente
+                  Continuar
                   <ArrowRight className="w-4 h-4 ml-2" />
                 </Button>
               </div>

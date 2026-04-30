@@ -78,82 +78,93 @@ const totalAnswers = courses?.length > 0
 
   return (
     <div
-      className="min-h-screen bg-background transition-opacity duration-600"
+      className="min-h-screen bg-background transition-opacity duration-700"
       style={getFadeStyle(fadingOut)}
     >
       <Navbar role="TEACHER" onLogout={handleLogout} />
 
-      <main className="max-w-6xl mx-auto px-4 py-12 space-y-8">
-        <div className="flex items-center justify-between">
+      <main className="max-w-6xl mx-auto px-4 py-8 md:py-12 space-y-10 animate-in fade-in slide-in-from-bottom-4 duration-1000">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div className="space-y-1">
-            <h1 className="text-3xl font-bold text-foreground">Panel del profesor</h1>
+            <h1 className="text-3xl md:text-4xl font-bold text-foreground tracking-tight">Panel del profesor</h1>
+            <p className="text-muted-foreground">Bienvenido de nuevo a tu espacio de gestión.</p>
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <Card className="bg-primary/5 border-primary/20">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          <Card className="bg-primary/5 border-primary/10 hover:border-primary/30 transition-all duration-300 shadow-sm group">
             <CardContent className="py-6 flex items-center gap-4">
-              <BookOpen className="w-8 h-8 text-primary" />
+              <div className="p-3 rounded-full bg-primary/10 group-hover:bg-primary/20 transition-colors">
+                <BookOpen className="w-6 h-6 md:w-8 md:h-8 text-primary" />
+              </div>
               <div>
-                <p className="text-2xl font-bold text-foreground">{courses.length}</p>
-                <p className="text-sm text-muted-foreground">Cursos creados</p>
+                <p className="text-2xl md:text-3xl font-bold text-foreground leading-none">{courses.length}</p>
+                <p className="text-sm font-medium text-muted-foreground mt-1">Cursos creados</p>
               </div>
             </CardContent>
           </Card>
 
-<Card className="bg-primary/5 border-primary/20">
-  <CardContent className="py-6 flex items-center gap-4">
-    <Users className="w-8 h-8 text-primary" />
-    <div>
-      <p className="text-2xl font-bold text-foreground">{totalStudents}</p>
-      <p className="text-sm text-muted-foreground">Alumnos inscritos</p>
-    </div>
-  </CardContent>
-</Card>
+          <Card className="bg-primary/5 border-primary/10 hover:border-primary/30 transition-all duration-300 shadow-sm group">
+            <CardContent className="py-6 flex items-center gap-4">
+              <div className="p-3 rounded-full bg-primary/10 group-hover:bg-primary/20 transition-colors">
+                <Users className="w-6 h-6 md:w-8 md:h-8 text-primary" />
+              </div>
+              <div>
+                <p className="text-2xl md:text-3xl font-bold text-foreground leading-none">{totalStudents}</p>
+                <p className="text-sm font-medium text-muted-foreground mt-1">Alumnos inscritos</p>
+              </div>
+            </CardContent>
+          </Card>
 
-<Card className="bg-primary/5 border-primary/20">
-  <CardContent className="py-6 flex items-center gap-4">
-    <BarChart3 className="w-8 h-8 text-primary" />
-    <div>
-      <p className="text-2xl font-bold text-foreground">{totalAnswers}</p>
-      <p className="text-sm text-muted-foreground">Respuestas totales</p>
-    </div>
-  </CardContent>
-</Card>
+          <Card className="bg-primary/5 border-primary/10 hover:border-primary/30 transition-all duration-300 shadow-sm group sm:col-span-2 lg:col-span-1">
+            <CardContent className="py-6 flex items-center gap-4">
+              <div className="p-3 rounded-full bg-primary/10 group-hover:bg-primary/20 transition-colors">
+                <BarChart3 className="w-6 h-6 md:w-8 md:h-8 text-primary" />
+              </div>
+              <div>
+                <p className="text-2xl md:text-3xl font-bold text-foreground leading-none">{totalAnswers}</p>
+                <p className="text-sm font-medium text-muted-foreground mt-1">Respuestas totales</p>
+              </div>
+            </CardContent>
+          </Card>
         </div>
 
-        <div className="space-y-4">
-          <div className="flex items-start justify-between">
+        <div className="space-y-6 pt-4">
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
             <div className="space-y-1">
-              <h1 className="text-3xl font-bold text-foreground">Mis cursos</h1>
-              <p className="text-muted-foreground">Gestiona tus cursos y alumnos</p>
+              <h2 className="text-2xl md:text-3xl font-bold text-foreground tracking-tight">Mis cursos</h2>
+              <p className="text-muted-foreground">Gestiona tus cursos y alumnos de forma centralizada</p>
             </div>
 
-              <div className="flex space-x-2 p-1 rounded-md shrink-0">
-                <Link href="/students">
-                  <Button variant="outline">
-                    <Users className="w-4 h-4 mr-2" />
-                    Ver alumnos
-                  </Button>
-                </Link>
-                
-                <Link href="/teacher/courses/new">
-                  <Button className="space-x-3">
-                    <Plus className="w-4 h-4 mr-2" />
-                      Nuevo curso
-                  </Button>
-                </Link>
-              </div>
-            
+            <div className="flex flex-wrap items-center gap-3">
+              <Link href="/students" className="flex-1 sm:flex-none">
+                <Button variant="outline" className="w-full transition-all active:scale-[0.98]">
+                  <Users className="w-4 h-4 mr-2" />
+                  Ver alumnos
+                </Button>
+              </Link>
+              
+              <Link href="/teacher/courses/new" className="flex-1 sm:flex-none">
+                <Button className="w-full shadow-md shadow-primary/20 transition-all active:scale-[0.98]">
+                  <Plus className="w-4 h-4 mr-2" />
+                  Nuevo curso
+                </Button>
+              </Link>
             </div>
+          </div>
           
           {courses.length === 0 ? (
-            <Card className="text-center py-16">
-              <CardContent className="space-y-4">
-                <BookOpen className="w-12 h-12 text-muted-foreground mx-auto" />
-                <p className="text-muted-foreground">No has creado ningún curso todavía.</p>
-                <Link href="/courses/new">
-                  <Button>
+            <Card className="text-center py-20 border-dashed bg-muted/20">
+              <CardContent className="space-y-6">
+                <div className="p-4 rounded-full bg-background w-fit mx-auto shadow-sm">
+                  <BookOpen className="w-12 h-12 text-muted-foreground/50" />
+                </div>
+                <div className="space-y-2">
+                  <p className="text-lg font-medium text-foreground">No hay cursos todavía</p>
+                  <p className="text-muted-foreground max-w-xs mx-auto">Comienza creando tu primer curso para compartir tus conocimientos.</p>
+                </div>
+                <Link href="/teacher/courses/new">
+                  <Button size="lg" className="px-8">
                     <Plus className="w-4 h-4 mr-2" />
                     Crear primer curso
                   </Button>
@@ -161,15 +172,16 @@ const totalAnswers = courses?.length > 0
               </CardContent>
             </Card>
           ) : (
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {courses.map((course) => (
-                <CourseCard
-                  key={course.id}
-                  id={course.id}
-                  title={course.title}
-                  description={course.description}
-                  role="TEACHER"
-                />
+                <div key={course.id} className="animate-in fade-in zoom-in-95 duration-500">
+                  <CourseCard
+                    id={course.id}
+                    title={course.title}
+                    description={course.description}
+                    role="TEACHER"
+                  />
+                </div>
               ))}
             </div>
           )}

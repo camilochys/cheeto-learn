@@ -20,8 +20,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className="font-sans antialiased">
-        {children}
+      <body className="font-sans antialiased min-h-screen bg-background text-foreground overflow-x-hidden">
+        <main className="relative flex flex-col w-full max-w-[100vw] overflow-x-hidden px-4 sm:px-6 lg:px-8">
+          {children}
+        </main>
       </body>
     </html>
   )

@@ -10,10 +10,12 @@ import {
   ChartNoAxesCombined,
   FileCode,
   FolderOpen,
+  LogOut,
   Mail,
   ShieldCheck,
   Sparkles,
   Star,
+  UserCircle,
   Users
 } from "lucide-react";
 import Link from "next/link";
@@ -47,24 +49,28 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen bg-background font-sans antialiased">
+    <div className="min-h-screen bg-background font-sans antialiased overflow-x-hidden">
       {/* --- NAVIGATION --- */}
       <nav className="border-b border-border bg-card/80 backdrop-blur-md sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-6 py-3 flex items-center justify-between">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between">
           <Link href="/" className="hover:opacity-80 transition-opacity">
-            <img src="/cheeto_learn_logo.png" alt="CheetoLearn" className="h-10 w-auto" />
+            <img src="/cheeto_learn_logo.png" alt="CheetoLearn" className="h-8 sm:h-10 w-auto" />
           </Link>
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2 sm:gap-4">
             {isLoggedIn ? (
               <>
                 <Link href={role === "TEACHER" ? "/teacher" : "/dashboard"}>
-                  <Button variant="default" className="font-semibold shadow-sm">MI CUENTA</Button>
+                  <Button variant="default" size="sm" className="font-semibold shadow-sm text-xs sm:text-sm px-3 sm:px-4">
+                    <UserCircle className="w-4 h-4 mr-1 hidden sm:inline" /> MI CUENTA
+                  </Button>
                 </Link>
-                <Button variant="outline" onClick={handleLogout} className="text-muted-foreground">CERRAR SESIÓN</Button>
+                <Button variant="outline" size="sm" onClick={handleLogout} className="text-muted-foreground text-xs sm:text-sm px-3 sm:px-4">
+                  <LogOut className="w-4 h-4 mr-1 hidden sm:inline" /> SALIR
+                </Button>
               </>
             ) : (
               <Link href="/login">
-                <Button className="font-semibold shadow-sm px-8">INICIAR SESIÓN</Button>
+                <Button className="font-semibold shadow-sm px-4 sm:px-8 text-sm">INICIAR SESIÓN</Button>
               </Link>
             )}
           </div>
@@ -72,50 +78,53 @@ export default function Home() {
       </nav>
 
       {/* --- HERO SECTION --- */}
-      <section className="relative pt-20 pb-32 overflow-hidden border-b border-border">
-        {/* --- BG --- */}
+      <section className="relative pt-12 md:pt-20 pb-20 md:pb-32 overflow-hidden border-b border-border">
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full -z-10 bg-[radial-gradient(circle_at_center,var(--tw-gradient-stops))] from-orange-50/40 via-transparent to-transparent opacity-70" />
         
-        <div className="max-w-7xl mx-auto px-6 grid lg:grid-cols-2 gap-16 items-center">
-          <div className="space-y-8">
-            <div className="inline-flex items-center rounded-full border border-orange-200 bg-orange-50 px-3 py-1 text-sm font-medium text-orange-600 shadow-sm animate-fade-in">
-              <Sparkles className="mr-2 h-4 w-4" />
+        <div className="max-w-7xl mx-auto px-6 grid lg:grid-cols-2 gap-12 lg:gap-16 items-center text-center lg:text-left">
+          <div className="space-y-6 md:space-y-8">
+            <div className="inline-flex items-center rounded-full border border-orange-200 bg-orange-50 px-3 py-1 text-xs sm:text-sm font-medium text-orange-600 shadow-sm animate-fade-in mx-auto lg:mx-0">
+              <Sparkles className="mr-2 h-3 w-3 sm:h-4 sm:w-4" />
               Nueva era del aprendizaje automático
             </div>
-            <h1 className="text-5xl md:text-6xl font-extrabold tracking-tight text-foreground leading-[1.1]">
+            <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight text-foreground leading-[1.1]">
               El aprendizaje moderno <br />
               <span className="text-primary">nunca fue tan sencillo</span>
             </h1>
-            <p className="text-xl text-muted-foreground leading-relaxed max-w-xl">
+            <p className="text-lg md:text-xl text-muted-foreground leading-relaxed max-w-xl mx-auto lg:mx-0">
               Un sistema intuitivo diseñado para reaccionar ante tu progreso. Profesores y alumnos colaborando en un entorno de alto rendimiento.
             </p>
-            <div className="flex flex-wrap gap-4">
-              <Link href={isLoggedIn ? (role === "TEACHER" ? "/teacher" : "/dashboard") : "/login"}>
-                <Button size="lg" className="h-12 px-8 text-lg shadow-lg hover:shadow-primary/20 transition-all">
-                  ¡Empieza ahora gratis!
+            <div className="flex flex-col sm:flex-row flex-wrap justify-center lg:justify-start gap-4">
+              <Link href={isLoggedIn ? (role === "TEACHER" ? "/teacher" : "/dashboard") : "/login"} className="w-full sm:w-auto">
+                <Button size="lg" className="w-full sm:w-auto h-12 px-8 text-base sm:text-lg shadow-lg hover:shadow-primary/20 transition-all">
+                  ¡Empieza ahora!
                 </Button>
               </Link>
-              <Button variant="outline" size="lg" className="h-12 px-8 text-lg" onClick={() => document.getElementById('features')?.scrollIntoView({ behavior: 'smooth' })}>
+              <Button variant="outline" size="lg" className="w-full sm:w-auto h-12 px-8 text-base sm:text-lg" onClick={() => document.getElementById('features')?.scrollIntoView({ behavior: 'smooth' })}>
                 Explorar funciones
               </Button>
             </div>
           </div>
 
-          {/* --- VISUAL MOCKUP EXAMPLE --- */}
-          <div className="relative lg:block hidden">
+          {/* --- VISUAL MOCKUP --- */}
+          <div className="relative mt-8 lg:mt-0 px-4 sm:px-0">
             <div className="absolute -inset-4 bg-linear-to-tr from-primary/20 to-orange-200/20 rounded-3xl blur-2xl -z-10" />
-            <div className="bg-card border border-border rounded-2xl shadow-2xl overflow-hidden p-2">
-               <div className="bg-muted/25 rounded-lg aspect-video flex items-center justify-center border border-border/50 group">
-                  <img src="/cheeto_learn_courses_example.png" className="w-lg opacity-20 group-hover:opacity-75 transition-opacity" alt="App Preview" />
-               </div>
+            <div className="bg-card border border-border rounded-2xl shadow-2xl overflow-hidden p-1 sm:p-2 max-w-2xl mx-auto">
+                <div className="bg-muted/25 rounded-lg aspect-video flex items-center justify-center border border-border/50 group">
+                   <img 
+                    src="/cheeto_learn_courses_example.png" 
+                    className="w-lg h-lg object-cover opacity-25 group-hover:opacity-75 transition-opacity" 
+                    alt="App Preview" 
+                   />
+                </div>
             </div>
 
-            <div className="absolute -bottom-6 -left-6 bg-input p-4 rounded-xl shadow-xl border border-border animate-bounce-slow">
+            <div className="absolute -bottom-6 -left-6 bg-input p-3 sm:p-4 rounded-xl shadow-xl border border-border animate-bounce-slow hidden md:block">
               <div className="flex items-center gap-3">
                 <div className="bg-primary/15 p-2 rounded-full"><ChartNoAxesCombined className="text-primary w-5 h-5" /></div>
-                <div>
-                  <p className="text-xs text-muted-foreground font-medium">Métricas y Estadísticas</p>
-                  <p className="text-sm font-bold">¡A tiempo real en tu panel!</p>
+                <div className="text-left">
+                  <p className="text-[10px] text-muted-foreground font-medium uppercase">Métricas y Estadísticas</p>
+                  <p className="text-xs sm:text-sm font-bold tracking-tight">¡A tiempo real en tu panel!</p>
                 </div>
               </div>
             </div>
@@ -124,14 +133,14 @@ export default function Home() {
       </section>
 
       {/* --- FEATURES SECTION --- */}
-      <section id="features" className="py-24 bg-slate-50/50">
-        <div className="max-w-7xl mx-auto px-6 space-y-16">
+      <section id="features" className="py-16 md:py-24 bg-slate-50/50">
+        <div className="max-w-7xl mx-auto px-6 space-y-12 md:space-y-16">
           <div className="text-center max-w-3xl mx-auto space-y-4">
-            <h2 className="text-4xl font-bold tracking-tight">Todo lo que necesitas para brillar</h2>
-            <p className="text-lg text-muted-foreground">Herramientas avanzadas integradas en una interfaz minimalista y sin distracciones.</p>
+            <h2 className="text-3xl md:text-4xl font-bold tracking-tight">Todo lo que necesitas para brillar</h2>
+            <p className="text-base md:text-lg text-muted-foreground">Herramientas avanzadas integradas en una interfaz minimalista y sin distracciones.</p>
           </div>
           
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
             {[
               { icon: BookOpen, title: "Cursos Inteligentes", desc: "Organización automática con analíticas predictivas de éxito." },
               { icon: Users, title: "Machine Learning", desc: "La plataforma aprende de tus errores para reforzar tus puntos débiles." },
@@ -140,10 +149,10 @@ export default function Home() {
             ].map((f, i) => (
               <Card key={i} className="group hover:border-primary/50 transition-all hover:shadow-md border-border bg-card">
                 <CardHeader>
-                  <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                  <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center mb-2 md:mb-4 group-hover:scale-110 transition-transform">
                     <f.icon className="w-6 h-6 text-primary" />
                   </div>
-                  <CardTitle className="text-xl">{f.title}</CardTitle>
+                  <CardTitle className="text-lg md:text-xl">{f.title}</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <p className="text-sm text-muted-foreground leading-relaxed">{f.desc}</p>
@@ -155,21 +164,20 @@ export default function Home() {
       </section>
 
       {/* --- CALL TO ACTION --- */}
-      <section className="py-24">
-        <div className="max-w-5xl mx-auto px-6">
-          <div className="bg-primary/50 rounded-[2.5rem] p-12 md:p-20 text-center relative overflow-hidden shadow-2xl shadow-primary/20">
-            {/* --- BG CIRCLES --- */}
+      <section className="py-16 md:py-24">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6">
+          <div className="bg-primary/75 rounded-3xl sm:rounded-[2.5rem] p-8 sm:p-12 md:p-20 text-center relative overflow-hidden shadow-2xl shadow-primary/20">
             <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -translate-y-1/2 translate-x-1/2 blur-3xl" />
             
-            <div className="relative z-10 space-y-8">
-              <h2 className="text-4xl md:text-5xl font-bold text-white leading-tight">
-                ¿Todo listo para transformar <br />tu manera de aprender?
+            <div className="relative z-10 space-y-6 md:space-y-8">
+              <h2 className="text-3xl md:text-5xl font-bold text-white leading-tight">
+                ¿Todo listo para transformar <br className="hidden sm:block" /> tu manera de aprender?
               </h2>
-              <p className="text-primary-foreground/90 text-lg max-w-2xl mx-auto">
+              <p className="text-primary-foreground/90 text-base md:text-lg max-w-2xl mx-auto">
                 Únete a la plataforma que está redefiniendo la educación digital con tecnología centrada en las personas.
               </p>
               <Link href={isLoggedIn ? (role === "TEACHER" ? "/teacher" : "/dashboard") : "/login"}>
-                <Button size="lg" variant="secondary" className="h-14 px-10 text-lg font-bold hover:scale-105 transition-transform">
+                <Button size="lg" variant="secondary" className="w-full sm:w-auto h-14 px-10 text-lg font-bold hover:scale-105 transition-transform">
                   ¡Empieza ahora mismo!
                   <ArrowRight className="w-5 h-5 ml-2" />
                 </Button>
@@ -180,95 +188,47 @@ export default function Home() {
       </section>
 
       {/* --- FOOTER --- */}
-    <footer className="border-t border-border bg-card mt-20">
+      <footer className="border-t border-border bg-card mt-12 md:mt-20">
+        <div className="max-w-7xl mx-auto px-6 py-12">
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-8 md:gap-12 mb-12">
+            <div className="space-y-4">
+              <h3 className="font-bold text-foreground uppercase tracking-wider text-xs sm:text-sm">Producto</h3>
+              <ul className="space-y-3">
+                <li><Link href="/features" className="text-xs sm:text-sm text-muted-foreground hover:text-primary flex items-center gap-2"><Star className="w-4 h-4" /> Características</Link></li>
+                <li><Link href="/dashboard" className="text-xs sm:text-sm text-muted-foreground hover:text-primary flex items-center gap-2"><FolderOpen className="w-4 h-4" /> Panel</Link></li>
+              </ul>
+            </div>
 
-      <div className="max-w-6xl mx-auto px-4 py-12">
+            <div className="space-y-4">
+              <h3 className="font-bold text-foreground uppercase tracking-wider text-xs sm:text-sm">Compañía</h3>
+              <ul className="space-y-3">
+                <li><Link href="/contact" className="text-xs sm:text-sm text-muted-foreground hover:text-primary flex items-center gap-2"><Mail className="w-4 h-4" /> Contacto</Link></li>
+                <li><Link href="/docs" className="text-xs sm:text-sm text-muted-foreground hover:text-primary flex items-center gap-2"><FileCode className="w-4 h-4" /> Documentación</Link></li>
+              </ul>
+            </div>
 
-        <div className="grid md:grid-cols-3 gap-12 mb-12">
-
-          
-
-          {/* --- PRODUCT COLUMN --- */}
-          <div className="space-y-4">
-            <h3 className="font-bold text-foreground uppercase tracking-wider text-sm">Producto</h3>
-            <ul className="space-y-3">
-              <li>
-                <Link href="/features" className="text-sm text-muted-foreground hover:text-primary transition-colors flex items-center gap-2">
-                  <Star className="w-4 h-4" />
-                  Características
-                </Link>
-              </li>
-              <li>
-                <Link href="/dashboard" className="text-sm text-muted-foreground hover:text-primary transition-colors flex items-center gap-2">
-                  <FolderOpen className="w-4 h-4" />
-                  Panel
-                </Link>
-              </li>
-            </ul>
+            <div className="space-y-4 col-span-2 md:col-span-1">
+              <h3 className="font-bold text-foreground uppercase tracking-wider text-xs sm:text-sm">Legal</h3>
+              <ul className="space-y-3">
+                <li><Link href="/privacy" className="text-xs sm:text-sm text-muted-foreground hover:text-primary flex items-center gap-2"><ShieldCheck className="w-4 h-4" /> Privacidad y Términos</Link></li>
+                <li className="text-[10px] sm:text-xs text-muted-foreground/60 italic">Proyecto con fines estrictamente educativos.</li>
+              </ul>
+            </div>
           </div>
 
-          {/* --- COMPANY COLUMN --- */}
-          <div className="space-y-4">
-            <h3 className="font-bold text-foreground uppercase tracking-wider text-sm">Compañía</h3>
-            <ul className="space-y-3">
-              <li>
-                <Link href="/contact" className="text-sm text-muted-foreground hover:text-primary transition-colors flex items-center gap-2">
-                  <Mail className="w-4 h-4" />
-                  Contacto
-                </Link>
-              </li>
-              <li>
-                <Link href="/docs" className="text-sm text-muted-foreground hover:text-primary transition-colors flex items-center gap-2">
-                  <FileCode className="w-4 h-4" />
-                    Documentación técnica
-                </Link>
-              </li>
-            </ul>
-          </div>
-
-          {/* --- LEGAL COLUMN --- */}
-          <div className="space-y-4">
-            <h3 className="font-bold text-foreground uppercase tracking-wider text-sm">Legal</h3>
-            <ul className="space-y-3">
-              <li>
-                <Link href="/privacy" className="text-sm text-muted-foreground hover:text-primary transition-colors flex items-center gap-2">
-                  <ShieldCheck className="w-4 h-4" />
-                  Privacidad y Términos
-                </Link>
-              </li>
-              <li className="text-xs text-muted-foreground/60 italic">
-                Proyecto con fines estrictamente educativos.
-              </li>
-            </ul>
-          </div>
-        </div>
-
-        {/* --- FOOTER --- */}
-        <div className="border-t border-border pt-8 flex flex-col md:flex-row items-center justify-between gap-6">
-          <div className="flex flex-col items-center md:items-start gap-1">
-            <p className="text-sm text-muted-foreground font-medium">
-              &copy; 2026 CheetoLearn.
-            </p>
-            <p className="text-xs text-muted-foreground/75">
-            Hecho con ❤️ para el futuro del e-learning... 🐈
-            </p>
-          </div>
-
-          <div className="flex items-center gap-4">
-            <a 
-              href="https://github.com/camilochys/cheeto-learn" 
-              target="_blank" 
-              rel="noopener noreferrer"
-            >
-              <Button variant="outline" className="gap-2 font-semibold">
-                <GithubIcon/>
-                GitHub
+          <div className="border-t border-border pt-8 flex flex-col md:flex-row items-center justify-between gap-6">
+            <div className="flex flex-col items-center md:items-start gap-1">
+              <p className="text-xs sm:text-sm text-muted-foreground font-medium">&copy; 2026 CheetoLearn.</p>
+              <p className="text-[10px] sm:text-xs text-muted-foreground/75 text-center md:text-left">Hecho con ❤️ para el futuro del e-learning... 🐈</p>
+            </div>
+            <a href="https://github.com/camilochys/cheeto-learn" target="_blank" rel="noopener noreferrer" className="w-full md:w-auto">
+              <Button variant="outline" className="w-full md:w-auto gap-1 font-semibold">
+                <GithubIcon/>GitHub
               </Button>
             </a>
           </div>
         </div>
-      </div>
-    </footer>
+      </footer>
     </div>
   );
 }

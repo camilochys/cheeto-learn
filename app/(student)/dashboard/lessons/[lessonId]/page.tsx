@@ -3,22 +3,21 @@
 import { LoadingScreen } from "@/components/shared/LoadingScreen";
 import { Navbar } from "@/components/shared/Navbar";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
 import { useAuth } from "@/hooks/useAuth";
 import { useFade } from "@/hooks/useFade";
 import {
     ArrowLeft,
+    BookOpen,
+    CheckCircle2,
     ChevronLeft,
     ChevronRight,
     Download,
     FileText,
-    Paperclip,
-    CheckCircle2,
-    BookOpen
+    Paperclip
 } from "lucide-react";
 import Link from "next/link";
-import { use, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { use, useEffect, useState } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 
@@ -58,7 +57,6 @@ export default function StudentLessonPage({ params }: { params: Promise<{ lesson
     async function loadData() {
         setLoading(true);
         try {
-            // --- 1. FETCH CURRENT LESSON ---
             const resLesson = await fetch(`/api/lessons/${lessonId}`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
@@ -72,7 +70,6 @@ export default function StudentLessonPage({ params }: { params: Promise<{ lesson
             const currentLesson: Lesson = dataLesson.data;
             setLesson(currentLesson);
 
-            // --- 2. FETCH ALL LESSONS OF THE SAME COURSE FOR NAVIGATION ---
             const resAll = await fetch(`/api/lessons?courseId=${currentLesson.courseId}`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
@@ -80,16 +77,12 @@ export default function StudentLessonPage({ params }: { params: Promise<{ lesson
             if (resAll.ok) {
                 const dataAll = await resAll.json();
                 const sortedLessons = dataAll.data.sort((a: any, b: any) => {
-
                     if (a.order !== b.order) {
                         return a.order - b.order;
                     }
-
                     return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
                 });
-
                 setAllLessons(sortedLessons);
-            
             }
         } catch (err) {
             console.error("Error loading lesson:", err);
@@ -99,7 +92,6 @@ export default function StudentLessonPage({ params }: { params: Promise<{ lesson
         }
     }
 
-    // --- NAVIGATION HELPERS ---
     const currentIndex = allLessons.findIndex((l) => l.id === lessonId);
     const prevLesson = currentIndex > 0 ? allLessons[currentIndex - 1] : null;
     const nextLesson = currentIndex < allLessons.length - 1 ? allLessons[currentIndex + 1] : null;
@@ -122,65 +114,51 @@ export default function StudentLessonPage({ params }: { params: Promise<{ lesson
         >
             <Navbar role="STUDENT" onLogout={logout} />
 
-            {/* --- TOP NAVIGATION BAR --- */}
-            <nav className="pb-12 mb-12 sticky top-0 z-10 bg-white/80 backdrop-blur-md border-slate-100">
-                <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
-                    <Link
-                        href={`/dashboard/course/${lesson?.courseId}`}
-                    >
-                        <Button variant="ghost" size="sm" className="text-primary">
-                        <ArrowLeft className="w-4 h-4" /> Volver al temario
-                        </Button>
-                    </Link>
+            <nav className="sticky top-0 z-40 bg-white/80 backdrop-blur-md border-b border-slate-100">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-2">
 
-                    {/* --- LESSON COUNTER --- */}
-                    {allLessons.length > 0 && (
-                        <span className="text-xs font-mono text-muted-foreground hidden md:block">
-                            Lección {currentIndex + 1} de {allLessons.length}
-                        </span>
-                    )}
-
-                    {/* --- PREV / NEXT BUTTONS --- */}
-                    <div className="flex items-center gap-16">
-                        {prevLesson ? (
-                            <Link href={`/dashboard/lessons/${prevLesson.id}`}>
-                                <Button variant="ghost" size="sm" className="text-primary">
-                                    <ChevronLeft className="w-4 h-4 mr-1" /> Anterior
+                        <div className="max-w-4xl w-full">
+                            <Link href={`/dashboard/course/${lesson?.courseId}`}>
+                                <Button variant="outline" size="sm" className="gap-2 bg-background shadow-sm hover:bg-accent transition-colors">
+                                    <ArrowLeft className="w-4 h-4" />
+                                    <span className="hidden sm:inline">Volver al temario</span>
+                                    <span className="sm:hidden">Volver</span>
                                 </Button>
                             </Link>
-                        ) : (
-                            <Button variant="ghost" size="sm" disabled className="opacity-30">
-                                <ChevronLeft className="w-4 h-4 mr-1" /> Anterior
-                            </Button>
+                        </div>
+
+                    <div className="flex items-center gap-2 sm:gap-4">
+                        {allLessons.length > 0 && (
+                            <span className="text-[10px] sm:text-xs font-mono text-muted-foreground bg-slate-100 px-2 py-1 rounded">
+                                {currentIndex + 1} / {allLessons.length}
+                            </span>
                         )}
-                        <div className="h-4 w-px bg-slate-200" />
-                        {nextLesson ? (
-                            <Link href={`/dashboard/lessons/${nextLesson.id}`}>
-                                <Button variant="ghost" size="sm" className="text-primary">
-                                    Siguiente <ChevronRight className="w-4 h-4" />
+                        
+                        <div className="flex items-center gap-1 sm:gap-2">
+                            <Link href={prevLesson ? `/dashboard/lessons/${prevLesson.id}` : "#"}>
+                                <Button variant="ghost" size="sm" disabled={!prevLesson} className="text-primary px-2">
+                                    <ChevronLeft className="w-4 h-4" />
                                 </Button>
                             </Link>
-                        ) : (
-                            <Button variant="ghost" size="sm" disabled className="opacity-30">
-                                Siguiente <ChevronRight className="w-4 h-4" />
-                            </Button>
-                        )}
+                            <Link href={nextLesson ? `/dashboard/lessons/${nextLesson.id}` : "#"}>
+                                <Button variant="ghost" size="sm" disabled={!nextLesson} className="text-primary px-2">
+                                    <ChevronRight className="w-4 h-4" />
+                                </Button>
+                            </Link>
+                        </div>
                     </div>
                 </div>
             </nav>
 
-            <main className="max-w-7xl mx-auto px-6 py-12">
-                <div style={{ display: "grid", gridTemplateColumns: "4fr 1fr", gap: "5rem" }}>
+            <main className="max-w-7xl mx-auto px-4 sm:px-6 py-8 lg:py-12">
+                <div className="flex flex-col lg:grid lg:grid-cols-12 gap-8 lg:gap-16">
 
-                    {/* --- MAIN CONTENT (3 COLS) --- */}
-                    <div className="space-y-8">
-
-                        {/* --- LESSON HEADER --- */}
+                    <div className="lg:col-span-8 space-y-8">
                         <header className="space-y-4 pb-8 border-b border-slate-100">
-                            <div className="flex items-center gap-2 text-primary font-bold text-sm tracking-wider uppercase">
+                            <div className="flex items-center gap-2 text-primary font-bold text-xs sm:text-sm tracking-wider uppercase">
                                 <FileText className="w-4 h-4" /> Lección en curso
                             </div>
-                            <h1 className="text-4xl lg:text-5xl font-extrabold tracking-tight text-slate-900">
+                            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-slate-900 leading-tight">
                                 {lesson?.title}
                             </h1>
                             <div className="flex items-center gap-3 text-sm text-muted-foreground">
@@ -194,117 +172,102 @@ export default function StudentLessonPage({ params }: { params: Promise<{ lesson
                             </div>
                         </header>
 
-                        {/* --- MARKDOWN CONTENT --- */}
-                        <article className="prose prose-slate prose-lg max-w-none
+                        <article className="prose prose-slate prose-base sm:prose-lg max-w-none
                             prose-headings:font-bold prose-headings:text-slate-900
-                            prose-h1:text-3xl prose-h2:text-2xl prose-h3:text-xl
                             prose-p:text-slate-600 prose-p:leading-relaxed
-                            prose-strong:text-slate-900 prose-strong:font-semibold
                             prose-a:text-primary prose-a:no-underline hover:prose-a:underline
-                            prose-code:text-primary prose-code:bg-slate-100 prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded prose-code:text-sm
-                            prose-pre:bg-slate-900 prose-pre:text-slate-100
-                            prose-blockquote:border-primary prose-blockquote:text-slate-500
-                            prose-ul:text-slate-600 prose-ol:text-slate-600
-                            prose-li:my-1
-                            prose-img:rounded-xl prose-img:shadow-md
-                            prose-hr:border-slate-200">
+                            prose-img:rounded-xl prose-img:shadow-md">
                             <ReactMarkdown remarkPlugins={[remarkGfm]}>
                                 {lesson?.content || "*Esta lección no tiene contenido escrito aún.*"}
                             </ReactMarkdown>
                         </article>
 
-                        {/* --- BOTTOM NAVIGATION --- */}
-                        <div className="pt-12 mt-12 border-slate-100 flex items-center justify-between gap-4">
-                            {prevLesson ? (
-                                <Link href={`/dashboard/lessons/${prevLesson.id}`}>
-                                    <Button variant="ghost" size="sm" className="text-primary">
-                                        <ChevronLeft className="w-4 h-4" />
-                                        <span className="hidden sm:inline">{prevLesson.title}</span>
-                                        <span className="sm:hidden">Anterior</span>
-                                    </Button>
-                                </Link>
-                            ) : <div />}
+                        <div className="pt-12 mt-12 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-6">
+                            <div className="w-full sm:w-auto order-2 sm:order-1">
+                                {prevLesson ? (
+                                    <Link href={`/dashboard/lessons/${prevLesson.id}`} className="w-full">
+                                        <Button variant="ghost" size="sm" className="text-primary w-full sm:w-auto justify-start">
+                                            <ChevronLeft className="w-4 h-4 mr-2" />
+                                            <span className="truncate max-w-37.5">{prevLesson.title}</span>
+                                        </Button>
+                                    </Link>
+                                ) : <div className="hidden sm:block" />}
+                            </div>
 
                             <Button
                                 onClick={() => setCompleted(true)}
                                 disabled={completed}
-                                className="gap-2 px-8 py-6 text-base font-bold rounded-full shadow-xl shadow-primary/20 hover:scale-105 transition-transform disabled:opacity-60 disabled:scale-100"
+                                className="w-full sm:w-auto order-1 sm:order-2 gap-2 px-8 py-6 text-base font-bold rounded-full shadow-xl shadow-primary/20 hover:scale-105 transition-transform disabled:opacity-60"
                             >
                                 <CheckCircle2 className="w-5 h-5" />
                                 {completed ? "¡Lección completada!" : "Marcar como completada"}
                             </Button>
 
-                            {nextLesson ? (
-                                <Link href={`/dashboard/lessons/${nextLesson.id}`}>
-                                    <Button variant="ghost" size="sm" className="text-primary">
-                                        <span className="hidden sm:inline">{nextLesson.title}</span>
-                                        <span className="sm:hidden">Siguiente</span>
-                                        <ChevronRight className="w-4 h-4" />
-                                    </Button>
-                                </Link>
-                            ) : (
-                                <Link href={`/dashboard/course/${lesson?.courseId}`}>
-                                    <Button variant="ghost" size="sm" className="text-primary">
-                                        Ver temario
-                                        <ChevronRight className="w-4 h-4" />
-                                    </Button>
-                                </Link>
-                            )}
+                            <div className="w-full sm:w-auto order-3">
+                                {nextLesson ? (
+                                    <Link href={`/dashboard/lessons/${nextLesson.id}`} className="w-full">
+                                        <Button variant="ghost" size="sm" className="text-primary w-full sm:w-auto justify-end">
+                                            <span className="truncate max-w-37.5">{nextLesson.title}</span>
+                                            <ChevronRight className="w-4 h-4 ml-2" />
+                                        </Button>
+                                    </Link>
+                                ) : (
+                                    <Link href={`/dashboard/course/${lesson?.courseId}`} className="w-full">
+                                        <Button variant="ghost" size="sm" className="text-primary w-full sm:w-auto justify-end">
+                                            Temario <ChevronRight className="w-4 h-4 ml-2" />
+                                        </Button>
+                                    </Link>
+                                )}
+                            </div>
                         </div>
                     </div>
 
-                    {/* --- SIDEBAR (1 COL) --- */}
-                    <aside className="col-start-3 col-end-4">
-                        <div className="sticky top-28 space-y-6">
-
-                            {/* --- LESSON INDEX --- */}
+                    <aside className="lg:col-span-4 space-y-10">
+                        <div className="lg:sticky lg:top-28 space-y-10">
                             {allLessons.length > 0 && (
-                                <div className="space-y-3">
-                                    <h3 className="text-xs font-bold uppercase tracking-widest text-slate-400 flex items-center gap-2">
-                                        <BookOpen className="w-3.5 h-3.5" /> Índice
+                                <div className="space-y-4">
+                                    <h3 className="text-xs font-bold uppercase tracking-widest text-slate-400 flex items-center gap-2 px-1">
+                                        <BookOpen className="w-3.5 h-3.5" /> Contenido del curso
                                     </h3>
-                                    <div className="space-y-1">
+                                    <div className="space-y-1 max-h-[40vh] lg:max-h-[50vh] overflow-y-auto pr-2 custom-scrollbar">
                                         {allLessons.map((l, index) => (
-                                            <Link
-                                                key={l.id}
-                                                href={`/dashboard/lessons/${l.id}`}
-                                                className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm transition-all ${
+                                            <Link key={l.id} href={`/dashboard/lessons/${l.id}`}>
+                                                <div className={`flex items-center gap-3 px-3 py-3 rounded-xl text-sm transition-all mb-1 ${
                                                     l.id === lessonId
-                                                        ? "bg-primary/10 text-primary font-semibold"
+                                                        ? "bg-primary/10 text-primary font-semibold ring-1 ring-primary/20"
                                                         : "text-slate-500 hover:bg-slate-50 hover:text-slate-900"
-                                                }`}
-                                            >
-                                                <span className="font-mono text-xs text-slate-300 w-5 shrink-0">
-                                                    {String(index + 1).padStart(2, "0")}
-                                                </span>
-                                                <span className="line-clamp-2 leading-snug">{l.title}</span>
+                                                }`}>
+                                                    <span className="font-mono text-[10px] text-slate-400 w-5 shrink-0">
+                                                        {String(index + 1).padStart(2, "0")}
+                                                    </span>
+                                                    <span className="line-clamp-2 leading-snug">{l.title}</span>
+                                                </div>
                                             </Link>
                                         ))}
                                     </div>
                                 </div>
                             )}
 
-                            {/* --- DOWNLOADABLE FILES --- */}
-                            <div className="space-y-3">
-                                <h3 className="text-xs font-bold uppercase tracking-widest text-slate-400 flex items-center gap-2">
-                                    <Paperclip className="w-3.5 h-3.5" /> Material descargable
+                            <div className="space-y-4">
+                                <h3 className="text-xs font-bold uppercase tracking-widest text-slate-400 flex items-center gap-2 px-1">
+                                    <Paperclip className="w-3.5 h-3.5" /> Recursos
                                 </h3>
 
                                 {lesson?.files && lesson.files.length > 0 ? (
-                                    <div className="space-y-2">
+                                    <div className="grid grid-cols-1 gap-2">
                                         {lesson.files.map((file) => (
                                             <a
                                                 key={file.id}
                                                 href={file.url}
                                                 target="_blank"
                                                 rel="noopener noreferrer"
-                                                className="group flex items-center justify-between p-3 rounded-xl border border-slate-100 bg-slate-50/50 hover:bg-white hover:border-primary hover:shadow-md transition-all"
+                                                className="group flex items-center justify-between p-4 rounded-2xl border border-slate-100 bg-slate-50/50 hover:bg-white hover:border-primary hover:shadow-lg hover:shadow-primary/5 transition-all"
                                             >
                                                 <div className="flex items-center gap-3 overflow-hidden">
-                                                    <div className="p-1.5 bg-white rounded-lg border group-hover:border-primary/30 transition-colors shrink-0">
+                                                    <div className="p-2 bg-white rounded-xl border group-hover:border-primary/30 transition-colors shrink-0">
                                                         <FileText className="w-4 h-4 text-slate-400 group-hover:text-primary" />
                                                     </div>
-                                                    <span className="text-sm font-medium truncate text-slate-700 group-hover:text-slate-900">
+                                                    <span className="text-sm font-medium truncate text-slate-700">
                                                         {file.name}
                                                     </span>
                                                 </div>
@@ -313,13 +276,11 @@ export default function StudentLessonPage({ params }: { params: Promise<{ lesson
                                         ))}
                                     </div>
                                 ) : (
-                                    <Card className="border-dashed shadow-none bg-slate-50/30">
-                                        <CardContent className="py-4 text-center">
-                                            <p className="text-xs text-muted-foreground italic">
-                                                No hay archivos adjuntos para esta lección.
-                                            </p>
-                                        </CardContent>
-                                    </Card>
+                                    <div className="py-8 text-center border-2 border-dashed border-slate-100 rounded-2xl">
+                                        <p className="text-xs text-muted-foreground italic">
+                                            No hay archivos para esta lección.
+                                        </p>
+                                    </div>
                                 )}
                             </div>
                         </div>
