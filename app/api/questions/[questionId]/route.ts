@@ -45,22 +45,34 @@ export async function PUT(req: Request, { params }: { params: Promise<{ question
     const { questionId } = await params;
     const body = await req.json();
     
+    // --- SECURITY VALIDATION ---
+    const { question, optionA, optionB, optionC, optionD, correctOption, difficultyLevel } = body;
+
+    if (!question?.trim() || !optionA?.trim() || !optionB?.trim() || !optionC?.trim() || !optionD?.trim()) {
+      return NextResponse.json(
+        { error: "Todos los campos (pregunta y opciones) son obligatorios." },
+        { status: 400 }
+      );
+    }
+
+    // --- UPDATE ---
     const updated = await prisma.question.update({
       where: { id: questionId },
       data: {
-        question: body.question,
-        optionA: body.optionA,
-        optionB: body.optionB,
-        optionC: body.optionC,
-        optionD: body.optionD,
-        correctOption: body.correctOption,
-        difficultyLevel: Number(body.difficultyLevel),
+        question,
+        optionA,
+        optionB,
+        optionC,
+        optionD,
+        correctOption,
+        difficultyLevel: Number(difficultyLevel),
       },
     });
 
     return NextResponse.json({ data: updated });
   } catch (error) {
-    return NextResponse.json({ error: "Error al actualizar" }, { status: 500 });
+    console.error("PUT_QUESTION_ERROR:", error);
+    return NextResponse.json({ error: "Error al actualizar la pregunta" }, { status: 500 });
   }
 }
 
