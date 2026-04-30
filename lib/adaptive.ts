@@ -1,5 +1,3 @@
-// lib/adaptive.ts
-
 export function calculateNewLevel(
   currentLevel: number,
   lastAnswers: { isCorrect: boolean }[]
