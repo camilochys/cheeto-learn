@@ -82,11 +82,11 @@ export default function CourseCurriculumPage({ params }: { params: Promise<{ cou
                 {/* --- HEADER --- */}
                 <div className="space-y-4">
 		        <div className="max-w-4xl w-full">
-		            <Link href="/dashboard">
-              <Button variant="outline" size="sm" className="gap-2 bg-background shadow-sm hover:bg-accent transition-colors">
-                <ArrowLeft className="w-4 h-4" /> Volver al panel
-              </Button>
-            </Link>
+                <Link href="/dashboard">
+                    <Button variant="outline" size="sm" className="gap-2 bg-background shadow-sm hover:bg-accent transition-colors">
+                        <ArrowLeft className="w-4 h-4" /> Volver al panel
+                    </Button>
+                </Link>
 			        </div>
                     <div className="space-y-2">
                         <h1 className="text-3xl sm:text-4xl font-bold tracking-tight text-slate-900">{course?.title}</h1>

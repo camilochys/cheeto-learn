@@ -21,7 +21,7 @@ interface PageProps {
 }
 
 export default function EditLessonPage({ params }: PageProps) {
-  // --- UNWRAP PARAMS FOR NEXTJS 15 ---
+  // --- UNWRAP PARAMS FOR NEXTJS ---
   const resolvedParams = use(params);
   const router = useRouter();
   const courseId = resolvedParams.courseId;
